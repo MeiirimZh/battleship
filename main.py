@@ -1,4 +1,6 @@
+import curses
 import time
+from curses import wrapper
 
 from scenes.player_vs_computer import PlayerVsComputer
 from scenes.player_vs_player import PlayerVsPlayer
@@ -12,13 +14,13 @@ class Game:
 
         self.scenes = {"Player vs Computer": self.player_vs_computer, "Player vs Player": self.player_vs_player}
 
-    def run(self):
+    def run(self, stdscr):
         while True:
-            self.scenes[self.game_state_manager.get_state()].run()
+            self.scenes[self.game_state_manager.get_state()].run(stdscr)
 
             time.sleep(.15)
 
-``
+
 class GameStateManager:
     def __init__(self, current_state):
         self.current_state = current_state
@@ -30,6 +32,10 @@ class GameStateManager:
         self.current_state = state
 
 
-if __name__ == "__main__":
+def main(stdscr):
     game = Game()
-    game.run()
+    game.run(stdscr)
+
+
+if __name__ == "__main__":
+    wrapper(main)
