@@ -6,12 +6,47 @@ class PlayerVsComputer:
 
         self.grid = [ ["[ ]" for j in range(10)] for i in range(10)]
 
-        self.x, self.y = 0, 0
-        self.x_step = 3
-        self.y_step = 1
         self.building_ships = [([0, 0], [0, 1], [0, 2], [0, 3])]
 
         self.placing_ships = True
+
+    def move_ship(self, ship: tuple, direction: str):
+        movement_orientation = 0
+        orientation_multiplier = 1
+
+        if direction == "left":
+            orientation_multiplier = -1
+        elif direction == "up":
+            movement_orientation = 1
+            orientation_multiplier = -1
+        elif direction == "down":
+            movement_orientation = 1
+        
+        for pos in ship:
+            pos[movement_orientation] += 1 * orientation_multiplier
+
+    def rotate_ship(self, ship):
+        ship_orientation = self.find_ship_orientation(self.building_ships[-1])
+        if ship_orientation != "Centered":
+            if ship_orientation == "Vertical":
+                i = ship[0][0]
+                for pos in ship[1:]:
+                    i += 1
+                    pos[0], pos[1] = i, ship[0][1]
+            else:
+                i = ship[0][1]
+                for pos in ship[1:]:
+                    i += 1
+                    pos[0], pos[1] = ship[0][0], i
+
+    def find_ship_orientation(self, ship):
+        if len(ship) == 1:
+            return "Centered"
+        
+        if ship[1][0] > ship[0][0]:
+            return "Horizontal"
+        if ship[1][1] > ship[0][1]:
+            return "Vertical"
     
     def run(self, stdscr, colors):
         if self.placing_ships:
@@ -31,18 +66,25 @@ class PlayerVsComputer:
                         stdscr.addstr(i+1, j*3+3, self.grid[i][j])
                     
             for pos in self.building_ships[-1]:
-                stdscr.addstr(pos[1]+1+self.y, pos[0]+3+self.x*3, "[@]", colors["CYAN"])
+                stdscr.addstr(pos[1]+1, pos[0]*3+3, "[@]", colors["CYAN"])
+
+            for i in range(len(self.building_ships[-1])):
+                stdscr.addstr(i+15, 0, ", ".join([str(x) for x in self.building_ships[-1][i]]))
 
             stdscr.refresh()
             
             key = stdscr.getkey()
+
             if key == "KEY_LEFT":
-                self.x = max(0, self.x - 1)
+                self.move_ship(self.building_ships[-1], "left")
             if key == "KEY_RIGHT":
-                self.x = min(9, self.x + 1)
+                self.move_ship(self.building_ships[-1], "right")
             if key == "KEY_UP":
-                self.y = max(0, self.y - 1)
+                self.move_ship(self.building_ships[-1], "up")
             if key == "KEY_DOWN":
-                self.y = min(10-len(self.building_ships[-1]), self.y + 1)
+                self.move_ship(self.building_ships[-1], "down")
+            if key.lower() == "r":
+                self.rotate_ship(self.building_ships[-1])
+        
         else:
             pass
