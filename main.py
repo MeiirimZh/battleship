@@ -14,9 +14,9 @@ class Game:
 
         self.scenes = {"Player vs Computer": self.player_vs_computer, "Player vs Player": self.player_vs_player}
 
-    def run(self, stdscr):
+    def run(self, stdscr, colors):
         while True:
-            self.scenes[self.game_state_manager.get_state()].run(stdscr)
+            self.scenes[self.game_state_manager.get_state()].run(stdscr, colors)
 
             time.sleep(.15)
 
@@ -33,8 +33,13 @@ class GameStateManager:
 
 
 def main(stdscr):
+    curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)
+    CYAN = curses.color_pair(1)
+
+    colors = {"CYAN": CYAN}
+
     game = Game()
-    game.run(stdscr)
+    game.run(stdscr, colors)
 
 
 if __name__ == "__main__":
