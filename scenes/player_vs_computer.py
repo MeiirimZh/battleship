@@ -54,11 +54,23 @@ class PlayerVsComputer:
                 for pos in ship[1:]:
                     i += 1
                     pos[0], pos[1] = i, ship[0][1]
+
+                if ship[-1][0] > 9:
+                    offset = ship[-1][0] - 9
+
+                    for pos in ship:
+                        pos[0] -= offset
             else:
                 i = ship[0][1]
                 for pos in ship[1:]:
                     i += 1
                     pos[0], pos[1] = ship[0][0], i
+                
+                if ship[-1][1] > 9:
+                    offset = ship[-1][1] - 9
+
+                    for pos in ship:
+                        pos[1] -= offset
 
     def find_ship_orientation(self, ship):
         if len(ship) == 1:
