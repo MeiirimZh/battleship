@@ -6,7 +6,10 @@ class PlayerVsComputer:
 
         self.grid = [ ["[ ]" for j in range(10)] for i in range(10)]
 
-        self.building_ships = [([0, 0], [0, 1], [0, 2], [0, 3])]
+        self.building_ships = [([0, 0],), ([0, 0],), ([0, 0],), ([0, 0],),
+                        ([0, 0], [0, 1]), ([0, 0], [0, 1]), ([0, 0], [0, 1]),
+                        ([0, 0], [0, 1], [0, 2]), ([0, 0], [0, 1], [0, 2]), 
+                        ([0, 0], [0, 1], [0, 2], [0, 3])]
 
         self.placing_ships = True
 
@@ -81,6 +84,11 @@ class PlayerVsComputer:
         if ship[1][1] > ship[0][1]:
             return "Vertical"
     
+    def place_ship(self, ship):
+        for pos in ship:
+            self.grid[pos[1]][pos[0]] = "[@]"
+        self.building_ships.remove(ship)
+
     def run(self, stdscr, colors):
         if self.placing_ships:
             stdscr.clear()
@@ -99,7 +107,7 @@ class PlayerVsComputer:
                         stdscr.addstr(i+1, j*3+3, self.grid[i][j])
                     
             for pos in self.building_ships[-1]:
-                stdscr.addstr(pos[1]+1, pos[0]*3+3, "[@]", colors["CYAN"])
+                stdscr.addstr(pos[1]+1, pos[0]*3+3, "[@]", colors["GREEN"])
 
             for i in range(len(self.building_ships[-1])):
                 stdscr.addstr(i+15, 0, ", ".join([str(x) for x in self.building_ships[-1][i]]))
@@ -118,6 +126,10 @@ class PlayerVsComputer:
                 self.move_ship(self.building_ships[-1], "down")
             if key.lower() == "r":
                 self.rotate_ship(self.building_ships[-1])
+            if key in ["\n", "\r", "KEY_ENTER"]:
+                self.place_ship(self.building_ships[-1])
+                if not self.building_ships:
+                    self.placing_ships = False
         
         else:
             pass
