@@ -11,19 +11,40 @@ class PlayerVsComputer:
         self.placing_ships = True
 
     def move_ship(self, ship: tuple, direction: str):
-        movement_orientation = 0
-        orientation_multiplier = 1
-
-        if direction == "left":
-            orientation_multiplier = -1
-        elif direction == "up":
-            movement_orientation = 1
-            orientation_multiplier = -1
-        elif direction == "down":
-            movement_orientation = 1
+        ship_orientation = self.find_ship_orientation(self.building_ships[-1])
         
-        for pos in ship:
-            pos[movement_orientation] += 1 * orientation_multiplier
+        if direction == "left":
+            if ship_orientation == "Vertical":
+                for pos in ship:
+                    pos[0] = max(0, pos[0] - 1)
+            else:
+                if ship[0][0] - 1 >= 0:
+                    for pos in ship:
+                        pos[0] -= 1
+        elif direction == "right":
+            if ship_orientation == "Vertical":
+                for pos in ship:
+                    pos[0] = min(9, pos[0] + 1)
+            else:
+                if ship[-1][0] + 1 <= 9:
+                    for pos in ship:
+                        pos[0] += 1
+        elif direction == "up":
+            if ship_orientation == "Vertical":
+                if ship[0][1] - 1 >= 0:
+                    for pos in ship:
+                        pos[1] -= 1
+            else:
+                for pos in ship:
+                    pos[1] = max(0, pos[1] - 1)
+        else:
+            if ship_orientation == "Vertical":
+                if ship[-1][1] + 1 <= 9:
+                    for pos in ship:
+                        pos[1] += 1
+            else:
+                for pos in ship:
+                    pos[1] = min(9, pos[1] + 1)
 
     def rotate_ship(self, ship):
         ship_orientation = self.find_ship_orientation(self.building_ships[-1])
