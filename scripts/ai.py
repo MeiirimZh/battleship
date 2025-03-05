@@ -1,4 +1,5 @@
 import random
+import copy
 
 
 class AI:
@@ -49,34 +50,43 @@ class AI:
         if ship[1][1] > ship[0][1]:
             return "Vertical"
 
-    def place_ships(self):
-        ship = self.building_ships[-1]
-        rotate = random.choice([True, False])
-
-        if rotate:
-            self.rotate_ship(ship)
-        
-        ship_orientation = self.find_ship_orientation(ship)
-
-        if ship_orientation == "Vertical":
-            x_move = random.randint(0, 9)
-            y_move = random.randint(0, 10 - len(ship))
-            for pos in ship:
-                pos[0] += x_move
-                pos[1] += y_move
-        else:
-            x_move = random.randint(0, 10 - len(ship))
-            y_move = random.randint(0, 9)
-            for pos in ship:
-                pos[0] += x_move
-                pos[1] += y_move
-
+    def ship_contacts(self, ship):
         for pos in ship:
-            self.grid[pos[1]][pos[0]] = "[@]"
-        self.building_ships.remove(ship)
-        
+            for offset in self.offsets:
+                x = pos[0] + offset[0]
+                y = pos[1] + offset[1]
+                if 0 <= x < 10 and 0 <= y < 10 and self.grid[y][x] == "[@]":
+                    return True
 
-ai = AI()
-ai.place_ships()
-for row in ai.grid:
-    print(row)
+    def place_ships(self):
+        while len(self.building_ships) != 0:
+            ship_placed = False
+            while not ship_placed:
+                temp_ship = copy.deepcopy(self.building_ships[-1])
+                rotate = random.choice([True, False])
+
+                if rotate:
+                    self.rotate_ship(temp_ship)
+
+                ship_orientation = self.find_ship_orientation(temp_ship)
+
+                if ship_orientation == "Vertical":
+                    x_move = random.randint(0, 9)
+                    y_move = random.randint(0, 10 - len(temp_ship))
+                    for pos in temp_ship:
+                        pos[0] += x_move
+                        pos[1] += y_move
+                else:
+                    x_move = random.randint(0, 10 - len(temp_ship))
+                    y_move = random.randint(0, 9)
+                    for pos in temp_ship:
+                        pos[0] += x_move
+                        pos[1] += y_move
+
+                if not self.ship_contacts(temp_ship):
+                    for pos in temp_ship:
+                        self.grid[pos[1]][pos[0]] = "[@]"
+
+                    self.building_ships.remove(self.building_ships[-1])
+
+                    ship_placed = True
