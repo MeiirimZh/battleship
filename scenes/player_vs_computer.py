@@ -11,6 +11,10 @@ class PlayerVsComputer:
                         ([0, 0], [0, 1], [0, 2]), ([0, 0], [0, 1], [0, 2]), 
                         ([0, 0], [0, 1], [0, 2], [0, 3])]
 
+        self.offsets = [(0, 0), (1, 1), (1, 0),
+                        (1, -1), (0, -1), (-1, -1),
+                        (-1, 0), (-1, 1), (0, 1)]
+
         self.placing_ships = True
 
     def move_ship(self, ship: tuple, direction: str):
@@ -84,13 +88,24 @@ class PlayerVsComputer:
         if ship[1][1] > ship[0][1]:
             return "Vertical"
     
-    def place_ship(self, ship):
+    def ship_contacts(self, ship):
         for pos in ship:
-            self.grid[pos[1]][pos[0]] = "[@]"
-        self.building_ships.remove(ship)
+            for offset in self.offsets:
+                x = pos[0] + offset[0]
+                y = pos[1] + offset[1]
+                if 0 <= x < 10 and 0 <= y < 10 and self.grid[y][x] == "[@]":
+                    return True
+
+    def place_ship(self, ship):
+        if not self.ship_contacts(ship):
+            for pos in ship:
+                self.grid[pos[1]][pos[0]] = "[@]"
+            self.building_ships.remove(ship)
 
     def run(self, stdscr, colors):
         if self.placing_ships:
+            msg = ""
+
             stdscr.clear()
 
             for i in range(len(self.alphabet)):
@@ -105,12 +120,20 @@ class PlayerVsComputer:
                         stdscr.addstr(i+1, j*3+3, self.grid[i][j], colors["CYAN"])
                     else:
                         stdscr.addstr(i+1, j*3+3, self.grid[i][j])
-                    
+    
             for pos in self.building_ships[-1]:
-                stdscr.addstr(pos[1]+1, pos[0]*3+3, "[@]", colors["GREEN"])
+                if self.ship_contacts(self.building_ships[-1]):
+                    stdscr.addstr(pos[1]+1, pos[0]*3+3, "[@]", colors["RED"])
+                    msg = "You can't place a ship there!"
+                else:
+                    stdscr.addstr(pos[1]+1, pos[0]*3+3, "[@]", colors["GREEN"])
 
+            # Ship position
             for i in range(len(self.building_ships[-1])):
-                stdscr.addstr(i+15, 0, ", ".join([str(x) for x in self.building_ships[-1][i]]))
+                stdscr.addstr(i+14, 0, ", ".join([str(x) for x in self.building_ships[-1][i]]))
+
+            if msg:
+                stdscr.addstr(12, 0, msg)
 
             stdscr.refresh()
             
