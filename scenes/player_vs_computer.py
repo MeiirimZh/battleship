@@ -5,6 +5,7 @@ class PlayerVsComputer:
         self.alphabet = 'ABCDEFGHIJ'
 
         self.grid = [ ["[ ]" for j in range(10)] for i in range(10)]
+        self.computer_display_grid = [ ["[ ]" for j in range(10)] for i in range(10)]
 
         self.building_ships = [([0, 0],), ([0, 0],), ([0, 0],), ([0, 0],),
                         ([0, 0], [0, 1]), ([0, 0], [0, 1]), ([0, 0], [0, 1]),
@@ -102,38 +103,49 @@ class PlayerVsComputer:
                 self.grid[pos[1]][pos[0]] = "[@]"
             self.building_ships.remove(ship)
 
+    def print_markers(self, stdscr, a_offset, n_offset=0):
+        for i in range(len(self.alphabet)):
+                stdscr.addstr(2, i * 3 + a_offset, self.alphabet[i])
+
+        for i in range(1, 11):
+            stdscr.addstr(i+2, 0 + n_offset, str(i))
+
+    def print_player_grid(self, stdscr, colors):
+        for i in range(10):
+            for j in range(10):
+                if self.grid[i][j] == "[@]":
+                    stdscr.addstr(i+3, j*3+3, self.grid[i][j], colors["CYAN"])
+                else:
+                    stdscr.addstr(i+3, j*3+3, self.grid[i][j])
+
+    def print_enemy_grid(self, stdscr, colors):
+        for i in range(10):
+            for j in range(10):
+                stdscr.addstr(i+3, j*3+53, self.computer_display_grid[i][j])
+
     def run(self, stdscr, colors):
         if self.placing_ships:
             msg = ""
 
             stdscr.clear()
 
-            for i in range(len(self.alphabet)):
-                stdscr.addstr(0, i * 3 + 4, self.alphabet[i])
-
-            for i in range(1, 11):
-                stdscr.addstr(i, 0, str(i))
-
-            for i in range(10):
-                for j in range(len(self.grid[i])):
-                    if self.grid[i][j] == "[@]":
-                        stdscr.addstr(i+1, j*3+3, self.grid[i][j], colors["CYAN"])
-                    else:
-                        stdscr.addstr(i+1, j*3+3, self.grid[i][j])
+            stdscr.addstr(0, 9, "Place the ships")
+            self.print_markers(stdscr, 4)
+            self.print_player_grid(stdscr, colors)
     
             for pos in self.building_ships[-1]:
                 if self.ship_contacts(self.building_ships[-1]):
-                    stdscr.addstr(pos[1]+1, pos[0]*3+3, "[@]", colors["RED"])
+                    stdscr.addstr(pos[1]+3, pos[0]*3+3, "[@]", colors["RED"])
                     msg = "You can't place a ship there!"
                 else:
-                    stdscr.addstr(pos[1]+1, pos[0]*3+3, "[@]", colors["GREEN"])
+                    stdscr.addstr(pos[1]+3, pos[0]*3+3, "[@]", colors["GREEN"])
 
             # Ship position
             for i in range(len(self.building_ships[-1])):
-                stdscr.addstr(i+14, 0, ", ".join([str(x) for x in self.building_ships[-1][i]]))
+                stdscr.addstr(i+16, 0, ", ".join([str(x + 1) for x in self.building_ships[-1][i]]))
 
             if msg:
-                stdscr.addstr(12, 0, msg)
+                stdscr.addstr(14, 0, msg)
 
             stdscr.refresh()
             
@@ -155,4 +167,16 @@ class PlayerVsComputer:
                     self.placing_ships = False
         
         else:
-            pass
+            stdscr.clear()
+
+            stdscr.addstr(0, 12, "Your grid")
+            stdscr.addstr(0, 62, "Enemy grid")
+            self.print_markers(stdscr, 4)
+            self.print_player_grid(stdscr, colors)
+            self.print_enemy_grid(stdscr, colors)
+
+            self.print_markers(stdscr, 54, 50)
+
+            stdscr.refresh()
+            
+            key = stdscr.getkey()
