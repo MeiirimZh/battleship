@@ -40,36 +40,27 @@ class DefaultGameScene:
         """
 
         ship_orientation = self.find_ship_orientation(ship_collection[-1])
+
+        if ship_orientation == "Horizontal":
+            width = len(ship)
+            height = 1
+        else:
+            width = 1
+            height = len(ship)
         
         if direction == "left":
-            if ship_orientation == "Vertical":
+            if ship[0][0] > 0:
                 for pos in ship:
-                    pos[0] = max(0, pos[0] - 1)
-            else:
-                if ship[0][0] - 1 >= 0:
-                    for pos in ship:
-                        pos[0] -= 1
-        elif direction == "right":
-            if ship_orientation == "Vertical":
-                for pos in ship:
-                    pos[0] = min(9, pos[0] + 1)
-            else:
-                if ship[-1][0] + 1 <= 9:
-                    for pos in ship:
-                        pos[0] += 1
+                    pos[0] -= 1
         elif direction == "up":
-            if ship_orientation == "Vertical":
-                if ship[0][1] - 1 >= 0:
-                    for pos in ship:
-                        pos[1] -= 1
-            else:
+            if ship[0][1] > 0:
                 for pos in ship:
-                    pos[1] = max(0, pos[1] - 1)
+                    pos[1] -= 1
+        elif direction == "right":
+            if ship[0][0] + width != 10:
+                for pos in ship:
+                    pos[0] += 1
         else:
-            if ship_orientation == "Vertical":
-                if ship[-1][1] + 1 <= 9:
-                    for pos in ship:
-                        pos[1] += 1
-            else:
+            if ship[0][1] + height != 10:
                 for pos in ship:
-                    pos[1] = min(9, pos[1] + 1)
+                    pos[1] += 1
