@@ -17,7 +17,16 @@ class DefaultGameScene:
         
         self.msg = ""
 
-    def find_ship_orientation(self, ship):
+    def find_ship_orientation(self, ship: tuple):
+        """
+        Finds given ship's orientation
+
+        Args:
+            ship (tuple): tuple containing ship's positions
+
+        Returns:
+            str: ship's orientation: 'Centered', 'Vertical' or 'Horizontal'
+        """
         if len(ship) == 1:
             return "Centered"
         
