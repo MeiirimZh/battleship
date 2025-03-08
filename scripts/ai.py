@@ -6,14 +6,16 @@ class AI:
     def __init__(self):
         self.grid = [ ["[ ]" for j in range(10)] for i in range(10)]
 
-        self.building_ships = [([0, 0],), ([0, 0],), ([0, 0],), ([0, 0],),
-                        ([0, 0], [0, 1]), ([0, 0], [0, 1]), ([0, 0], [0, 1]),
-                        ([0, 0], [0, 1], [0, 2]), ([0, 0], [0, 1], [0, 2]), 
-                        ([0, 0], [0, 1], [0, 2], [0, 3])]
+        self.building_ships = [[[0, 0],], [[0, 0],], [[0, 0],], [[0, 0],],
+                        [[0, 0], [0, 1]], [[0, 0], [0, 1]], [[0, 0], [0, 1]],
+                        [[0, 0], [0, 1], [0, 2]], [[0, 0], [0, 1], [0, 2]], 
+                        [[0, 0], [0, 1], [0, 2], [0, 3]]]
 
-        self.offsets = [(0, 0), (1, 1), (1, 0),
-                        (1, -1), (0, -1), (-1, -1),
-                        (-1, 0), (-1, 1), (0, 1)]
+        self.offsets = [(0, 1), (1, 0), (0, -1),
+                        (-1, 0), (0, 0), (1, 1),
+                        (1, -1), (-1, -1), (-1, 1)]
+        
+        self.ships = []
         
     def rotate_ship(self, ship):
         ship_orientation = self.find_ship_orientation(self.building_ships[-1])
@@ -87,6 +89,16 @@ class AI:
                     for pos in temp_ship:
                         self.grid[pos[1]][pos[0]] = "[@]"
 
+                    self.ships.append(temp_ship)
+
                     self.building_ships.remove(self.building_ships[-1])
 
                     ship_placed = True
+
+    def ship_destroyed(self, x, y):
+        for ship in self.ships:
+            for pos in ship:
+                if pos[0] == x and pos[1] == y:
+                    ship.remove(pos)
+                    if len(ship) == 0:
+                        return pos[0], pos[1]

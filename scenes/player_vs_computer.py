@@ -1,6 +1,12 @@
+from scripts.ai import AI
+
+
 class PlayerVsComputer:
     def __init__(self, game_state_manager):
         self.game_state_manager = game_state_manager
+
+        self.computer = AI()
+        self.computer.place_ships()
 
         self.alphabet = 'ABCDEFGHIJ'
 
@@ -15,8 +21,12 @@ class PlayerVsComputer:
         self.offsets = [(0, 0), (1, 1), (1, 0),
                         (1, -1), (0, -1), (-1, -1),
                         (-1, 0), (-1, 1), (0, 1)]
+        
+        self.x = 0
+        self.y = 0
 
-        self.placing_ships = True
+        self.placing_ships = False
+        self.msg = ""
 
     def move_ship(self, ship: tuple, direction: str):
         ship_orientation = self.find_ship_orientation(self.building_ships[-1])
@@ -121,7 +131,10 @@ class PlayerVsComputer:
     def print_enemy_grid(self, stdscr, colors):
         for i in range(10):
             for j in range(10):
-                stdscr.addstr(i+3, j*3+53, self.computer_display_grid[i][j])
+                if self.computer_display_grid[i][j] == "[#]":
+                    stdscr.addstr(i+3, j*3+53, self.computer_display_grid[i][j], colors["YELLOW"])
+                else:
+                    stdscr.addstr(i+3, j*3+53, self.computer_display_grid[i][j])
 
     def run(self, stdscr, colors):
         if self.placing_ships:
@@ -175,8 +188,32 @@ class PlayerVsComputer:
             self.print_player_grid(stdscr, colors)
             self.print_enemy_grid(stdscr, colors)
 
+            stdscr.addstr(self.y+3, self.x*3+53, "[x]", colors["RED"])
+
             self.print_markers(stdscr, 54, 50)
+
+            if self.msg:
+                stdscr.addstr(14, 0, self.msg)
 
             stdscr.refresh()
             
             key = stdscr.getkey()
+
+            if key == "KEY_LEFT":
+                self.x = max(0, self.x - 1)
+            if key == "KEY_RIGHT":
+                self.x = min(9, self.x + 1)
+            if key == "KEY_UP":
+                self.y = max(0, self.y - 1)
+            if key == "KEY_DOWN":
+                self.y = min(9, self.y + 1)
+            if key in ["\n", "\r", "KEY_ENTER"]:
+                if self.computer.grid[self.y][self.x] == "[@]":
+                    self.computer_display_grid[self.y][self.x] = "[#]"
+                    self.computer.grid[self.y][self.x] = "[ ]"
+                    res = self.computer.ship_destroyed(self.x, self.y)
+                    self.msg = "Destroyed!" if res else "Hit!"
+                else:
+                    self.computer_display_grid[self.y][self.x] = "[o]"
+            else:
+                self.msg = ""
