@@ -1,68 +1,20 @@
+from scenes.default_game_scene import DefaultGameScene
 from scripts.ai import AI
 
 
-class PlayerVsComputer:
+class PlayerVsComputer(DefaultGameScene):
     def __init__(self, game_state_manager):
-        self.game_state_manager = game_state_manager
+        super().__init__(game_state_manager)
 
         self.computer = AI()
         self.computer.place_ships()
 
-        self.alphabet = 'ABCDEFGHIJ'
-
-        self.grid = [ ["[ ]" for j in range(10)] for i in range(10)]
         self.computer_display_grid = [ ["[ ]" for j in range(10)] for i in range(10)]
-
-        self.building_ships = [([0, 0],), ([0, 0],), ([0, 0],), ([0, 0],),
-                        ([0, 0], [0, 1]), ([0, 0], [0, 1]), ([0, 0], [0, 1]),
-                        ([0, 0], [0, 1], [0, 2]), ([0, 0], [0, 1], [0, 2]), 
-                        ([0, 0], [0, 1], [0, 2], [0, 3])]
-
-        self.offsets = [(0, 0), (1, 1), (1, 0),
-                        (1, -1), (0, -1), (-1, -1),
-                        (-1, 0), (-1, 1), (0, 1)]
         
         self.x = 0
         self.y = 0
 
         self.placing_ships = True
-        self.msg = ""
-
-    def move_ship(self, ship: tuple, direction: str):
-        ship_orientation = self.find_ship_orientation(self.building_ships[-1])
-        
-        if direction == "left":
-            if ship_orientation == "Vertical":
-                for pos in ship:
-                    pos[0] = max(0, pos[0] - 1)
-            else:
-                if ship[0][0] - 1 >= 0:
-                    for pos in ship:
-                        pos[0] -= 1
-        elif direction == "right":
-            if ship_orientation == "Vertical":
-                for pos in ship:
-                    pos[0] = min(9, pos[0] + 1)
-            else:
-                if ship[-1][0] + 1 <= 9:
-                    for pos in ship:
-                        pos[0] += 1
-        elif direction == "up":
-            if ship_orientation == "Vertical":
-                if ship[0][1] - 1 >= 0:
-                    for pos in ship:
-                        pos[1] -= 1
-            else:
-                for pos in ship:
-                    pos[1] = max(0, pos[1] - 1)
-        else:
-            if ship_orientation == "Vertical":
-                if ship[-1][1] + 1 <= 9:
-                    for pos in ship:
-                        pos[1] += 1
-            else:
-                for pos in ship:
-                    pos[1] = min(9, pos[1] + 1)
 
     def rotate_ship(self, ship):
         ship_orientation = self.find_ship_orientation(self.building_ships[-1])
@@ -89,15 +41,6 @@ class PlayerVsComputer:
 
                     for pos in ship:
                         pos[1] -= offset
-
-    def find_ship_orientation(self, ship):
-        if len(ship) == 1:
-            return "Centered"
-        
-        if ship[1][0] > ship[0][0]:
-            return "Horizontal"
-        if ship[1][1] > ship[0][1]:
-            return "Vertical"
     
     def ship_contacts(self, ship):
         for pos in ship:
@@ -196,13 +139,13 @@ class PlayerVsComputer:
             key = stdscr.getkey()
 
             if key == "KEY_LEFT":
-                self.move_ship(self.building_ships[-1], "left")
+                self.move_ship(self.building_ships[-1], "left", self.building_ships)
             if key == "KEY_RIGHT":
-                self.move_ship(self.building_ships[-1], "right")
+                self.move_ship(self.building_ships[-1], "right", self.building_ships)
             if key == "KEY_UP":
-                self.move_ship(self.building_ships[-1], "up")
+                self.move_ship(self.building_ships[-1], "up", self.building_ships)
             if key == "KEY_DOWN":
-                self.move_ship(self.building_ships[-1], "down")
+                self.move_ship(self.building_ships[-1], "down", self.building_ships)
             if key.lower() == "r":
                 self.rotate_ship(self.building_ships[-1])
             if key in ["\n", "\r", "KEY_ENTER"]:
