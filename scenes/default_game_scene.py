@@ -10,19 +10,19 @@ class DefaultGameScene:
                         (1, -1), (0, -1), (-1, -1),
                         (-1, 0), (-1, 1), (0, 1)]
         
-        self.building_ships = [([0, 0],), ([0, 0],), ([0, 0],), ([0, 0],),
-                        ([0, 0], [0, 1]), ([0, 0], [0, 1]), ([0, 0], [0, 1]),
-                        ([0, 0], [0, 1], [0, 2]), ([0, 0], [0, 1], [0, 2]), 
-                        ([0, 0], [0, 1], [0, 2], [0, 3])]
+        self.building_ships = [[[0, 0],], [[0, 0],], [[0, 0],], [[0, 0],],
+                        [[0, 0], [0, 1]], [[0, 0], [0, 1]], [[0, 0], [0, 1]],
+                        [[0, 0], [0, 1], [0, 2]], [[0, 0], [0, 1], [0, 2]], 
+                        [[0, 0], [0, 1], [0, 2], [0, 3]]]
         
         self.msg = ""
 
-    def find_ship_orientation(self, ship: tuple):
+    def find_ship_orientation(self, ship: list):
         """
         Finds given ship's orientation
 
         Args:
-            ship (tuple): tuple containing ship's positions
+            ship (list): list containing ship's positions
 
         Returns:
             str: ship's orientation: 'Centered', 'Vertical' or 'Horizontal'
@@ -35,12 +35,12 @@ class DefaultGameScene:
         if ship[1][1] > ship[0][1]:
             return "Vertical"
 
-    def move_ship(self, ship: tuple, direction: str, ship_collection: list):
+    def move_ship(self, ship: list, direction: str, ship_collection: list):
         """
         Moves given ship depending on the direction value
 
         Args:
-            ship (tuple): tuple containing ship's positions
+            ship (list): list containing ship's positions
             direction (str): left, right, up or down
             ship_collection (list): list, where given ship is contained
 
