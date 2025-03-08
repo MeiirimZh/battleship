@@ -25,7 +25,7 @@ class PlayerVsComputer:
         self.x = 0
         self.y = 0
 
-        self.placing_ships = False
+        self.placing_ships = True
         self.msg = ""
 
     def move_ship(self, ship: tuple, direction: str):
@@ -133,8 +133,39 @@ class PlayerVsComputer:
             for j in range(10):
                 if self.computer_display_grid[i][j] == "[#]":
                     stdscr.addstr(i+3, j*3+53, self.computer_display_grid[i][j], colors["YELLOW"])
+                elif self.computer_display_grid[i][j] == "[x]":
+                    stdscr.addstr(i+3, j*3+53, self.computer_display_grid[i][j], colors["RED"])
                 else:
                     stdscr.addstr(i+3, j*3+53, self.computer_display_grid[i][j])
+
+    def destroy_ship(self, grid, x, y):
+        ship = [[x, y]]
+
+        grid[y][x] = "[x]"
+        for offset in self.offsets:
+            if x + offset[0] <= 9:
+                offset_x = x + offset[0]
+            if y + offset[1] <= 9:
+                offset_y = y + offset[1]
+            if grid[offset_y][offset_x] == "[#]":
+                grid[offset_y][offset_x] = "[x]"
+                ship.append([offset_x, offset_y])
+                try:
+                    while grid[offset_y + offset[1]][offset_x + offset[0]] == "[#]":
+                        offset_x += offset[0]
+                        offset_y += offset[1]
+                        grid[offset_y][offset_x] = "[x]"
+                        ship.append([offset_x, offset_y])
+                except:
+                    pass
+        
+        for pos in ship:
+            for offset in self.offsets:
+                offset_x = pos[0] + offset[0]
+                offset_y = pos[1] + offset[1]
+                if 0 <= offset_x <= 9 and 0 <= offset_y <= 9:
+                    if grid[offset_y][offset_x] == "[ ]":
+                        grid[offset_y][offset_x] = "[o]"
 
     def run(self, stdscr, colors):
         if self.placing_ships:
@@ -188,7 +219,7 @@ class PlayerVsComputer:
             self.print_player_grid(stdscr, colors)
             self.print_enemy_grid(stdscr, colors)
 
-            stdscr.addstr(self.y+3, self.x*3+53, "[x]", colors["RED"])
+            stdscr.addstr(self.y+3, self.x*3+53, "[+]", colors["MAGENTA"])
 
             self.print_markers(stdscr, 54, 50)
 
@@ -211,8 +242,13 @@ class PlayerVsComputer:
                 if self.computer.grid[self.y][self.x] == "[@]":
                     self.computer_display_grid[self.y][self.x] = "[#]"
                     self.computer.grid[self.y][self.x] = "[ ]"
+
                     res = self.computer.ship_destroyed(self.x, self.y)
-                    self.msg = "Destroyed!" if res else "Hit!"
+                    if res:
+                        self.msg = "Destroyed!"
+                        self.destroy_ship(self.computer_display_grid, self.x, self.y)
+                    else:
+                        self.msg = "Hit!"
                 else:
                     self.computer_display_grid[self.y][self.x] = "[o]"
             else:
