@@ -14,50 +14,7 @@ class PlayerVsComputer(DefaultGameScene):
         self.x = 0
         self.y = 0
 
-        self.placing_ships = True
-    
-    def ship_contacts(self, ship):
-        for pos in ship:
-            for offset in self.offsets:
-                x = pos[0] + offset[0]
-                y = pos[1] + offset[1]
-                if 0 <= x < 10 and 0 <= y < 10 and self.grid[y][x] == "[@]":
-                    return True
-
-    def place_ship(self, ship):
-        if not self.ship_contacts(ship):
-            for pos in ship:
-                self.grid[pos[1]][pos[0]] = "[@]"
-            self.building_ships.remove(ship)
-
-    def destroy_ship(self, grid, x, y):
-        ship = [[x, y]]
-
-        grid[y][x] = "[x]"
-        for offset in self.offsets:
-            if x + offset[0] <= 9:
-                offset_x = x + offset[0]
-            if y + offset[1] <= 9:
-                offset_y = y + offset[1]
-            if grid[offset_y][offset_x] == "[#]":
-                grid[offset_y][offset_x] = "[x]"
-                ship.append([offset_x, offset_y])
-                try:
-                    while grid[offset_y + offset[1]][offset_x + offset[0]] == "[#]":
-                        offset_x += offset[0]
-                        offset_y += offset[1]
-                        grid[offset_y][offset_x] = "[x]"
-                        ship.append([offset_x, offset_y])
-                except:
-                    pass
-        
-        for pos in ship:
-            for offset in self.offsets:
-                offset_x = pos[0] + offset[0]
-                offset_y = pos[1] + offset[1]
-                if 0 <= offset_x <= 9 and 0 <= offset_y <= 9:
-                    if grid[offset_y][offset_x] == "[ ]":
-                        grid[offset_y][offset_x] = "[o]"
+        self.placing_ships = False
 
     def run(self, stdscr, colors):
         if self.placing_ships:
@@ -132,7 +89,7 @@ class PlayerVsComputer(DefaultGameScene):
                     res = self.computer.ship_destroyed(self.x, self.y)
                     if res:
                         self.msg = "Destroyed!"
-                        self.destroy_ship(self.computer_display_grid, self.x, self.y)
+                        self.destroy_ship(self.computer_display_grid, res)
                     else:
                         self.msg = "Hit!"
                 else:

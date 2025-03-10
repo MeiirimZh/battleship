@@ -15,6 +15,7 @@ class AI:
                         (-1, 0), (0, 0), (1, 1),
                         (1, -1), (-1, -1), (-1, 1)]
         
+        self.init_ships = []
         self.ships = []
         
     def rotate_ship(self, ship):
@@ -94,6 +95,13 @@ class AI:
                     self.building_ships.remove(self.building_ships[-1])
 
                     ship_placed = True
+        self.init_ships = copy.deepcopy(self.ships)
+
+    def find_ship(self, x, y):
+        for ship in self.init_ships:
+            for pos in ship:
+                if pos[0] == x and pos[1] == y:
+                    return ship
 
     def ship_destroyed(self, x, y):
         for ship in self.ships:
@@ -101,4 +109,4 @@ class AI:
                 if pos[0] == x and pos[1] == y:
                     ship.remove(pos)
                     if len(ship) == 0:
-                        return pos[0], pos[1]
+                        return self.find_ship(x, y)
