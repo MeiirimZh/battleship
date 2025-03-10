@@ -18,7 +18,7 @@ class PlayerVsComputer(DefaultGameScene):
 
     def run(self, stdscr, colors):
         if self.placing_ships:
-            msg = ""
+            msg = "Ship position:"
 
             stdscr.clear()
 
@@ -33,7 +33,6 @@ class PlayerVsComputer(DefaultGameScene):
                 else:
                     stdscr.addstr(pos[1]+3, pos[0]*3+3, "[@]", colors["GREEN"])
 
-            # Ship position
             for i in range(len(self.building_ships[-1])):
                 stdscr.addstr(i+16, 0, ", ".join([str(x + 1) for x in self.building_ships[-1][i]]))
 
@@ -62,7 +61,7 @@ class PlayerVsComputer(DefaultGameScene):
             self.print_player_grid(stdscr, colors, self.grid)
             self.print_enemy_grid(stdscr, colors, self.computer_display_grid)
 
-            stdscr.addstr(self.y+3, self.x*3+53, "[+]", colors["MAGENTA"])
+            stdscr.addstr(self.y+3, self.x*3+53, "[+]", colors["CYAN"])
 
             self.print_markers(stdscr, 54, 50)
 

@@ -42,9 +42,8 @@ def main(stdscr):
     RED = curses.color_pair(2)
     GREEN = curses.color_pair(3)
     YELLOW = curses.color_pair(4)
-    MAGENTA = curses.color_pair(5)
 
-    colors = {"CYAN": CYAN, "RED": RED, "GREEN": GREEN, "YELLOW": YELLOW, "MAGENTA": MAGENTA}
+    colors = {"CYAN": CYAN, "RED": RED, "GREEN": GREEN, "YELLOW": YELLOW}
 
     game = Game()
     game.run(stdscr, colors)
