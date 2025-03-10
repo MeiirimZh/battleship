@@ -1,3 +1,6 @@
+import random
+import time
+
 from scenes.default_game_scene import DefaultGameScene
 from scripts.ai import AI
 
@@ -15,6 +18,8 @@ class PlayerVsComputer(DefaultGameScene):
         self.y = 0
 
         self.placing_ships = True
+
+        self.player_turn = random.choice([True, False])
 
     def run(self, stdscr, colors):
         if self.placing_ships:
@@ -61,37 +66,59 @@ class PlayerVsComputer(DefaultGameScene):
             self.print_player_grid(stdscr, colors, self.grid)
             self.print_enemy_grid(stdscr, colors, self.computer_display_grid)
 
-            stdscr.addstr(self.y+3, self.x*3+53, "[+]", colors["CYAN"])
+            if self.player_turn:
+                self.turn_msg = "Your turn"
+
+                stdscr.addstr(self.y+3, self.x*3+53, "[+]", colors["CYAN"])
+            else:
+                self.turn_msg = "Computer's turn"
+
+            stdscr.addstr(14, 0, self.turn_msg)
+
+            if self.msg:
+                stdscr.addstr(15, 0, self.msg)
+
+            if self.msg_2:
+                stdscr.addstr(16, 0, self.msg_2)
 
             self.print_markers(stdscr, 54, 50)
 
-            if self.msg:
-                stdscr.addstr(14, 0, self.msg)
-
             stdscr.refresh()
-            
-            key = stdscr.getkey()
 
-            if key == "KEY_LEFT":
-                self.x = max(0, self.x - 1)
-            if key == "KEY_RIGHT":
-                self.x = min(9, self.x + 1)
-            if key == "KEY_UP":
-                self.y = max(0, self.y - 1)
-            if key == "KEY_DOWN":
-                self.y = min(9, self.y + 1)
-            if key in ["\n", "\r", "KEY_ENTER"]:
-                if self.computer.grid[self.y][self.x] == "[@]":
-                    self.computer_display_grid[self.y][self.x] = "[#]"
-                    self.computer.grid[self.y][self.x] = "[ ]"
+            if self.player_turn:
+                key = stdscr.getkey()
 
-                    res = self.computer.ship_destroyed(self.x, self.y)
-                    if res:
-                        self.msg = "Destroyed!"
-                        self.destroy_ship(self.computer_display_grid, res)
+                if key == "KEY_LEFT":
+                    self.x = max(0, self.x - 1)
+                if key == "KEY_RIGHT":
+                    self.x = min(9, self.x + 1)
+                if key == "KEY_UP":
+                    self.y = max(0, self.y - 1)
+                if key == "KEY_DOWN":
+                    self.y = min(9, self.y + 1)
+                if key in ["\n", "\r", "KEY_ENTER"]:
+                    if self.computer.grid[self.y][self.x] == "[@]":
+                        self.computer_display_grid[self.y][self.x] = "[#]"
+                        self.computer.grid[self.y][self.x] = "[ ]"
+
+                        res = self.computer.ship_destroyed(self.x, self.y)
+                        if res:
+                            self.msg = "Player: Destroyed!"
+                            self.destroy_ship(self.computer_display_grid, res)
+                        else:
+                            self.msg = "Player: Hit!"
                     else:
-                        self.msg = "Hit!"
+                        self.computer_display_grid[self.y][self.x] = "[o]"
+
+                        self.player_turn = False
                 else:
-                    self.computer_display_grid[self.y][self.x] = "[o]"
+                    self.msg = ""
             else:
-                self.msg = ""
+                time.sleep(2)
+
+                attack = self.computer.attack(self.grid)
+                if attack == "Hit!":
+                    self.msg_2 = "Computer: Hit!"
+                else:
+                    self.msg_2 = ""
+                    self.player_turn = True

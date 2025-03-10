@@ -17,6 +17,10 @@ class AI:
         
         self.init_ships = []
         self.ships = []
+
+        self.ship_under_attack = None
+        self.attack_offsets = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+        self.current_attack_offsets = [[0, 1], [0, -1], [1, 0], [-1, 0]]
         
     def rotate_ship(self, ship):
         ship_orientation = self.find_ship_orientation(self.building_ships[-1])
@@ -110,3 +114,35 @@ class AI:
                     ship.remove(pos)
                     if len(ship) == 0:
                         return self.find_ship(x, y)
+
+    def attack(self, player_grid):
+        if self.ship_under_attack:
+            attacked = False
+            while not attacked:
+                attack_offset = random.choice(self.attack_offsets)
+                x, y = attack_offset
+                x += self.ship_under_attack[0]
+                y += self.ship_under_attack[1]
+                if 0 <= x <= 9 and 0 <= y <= 9:
+                    if player_grid[y][x] == "[@]":
+                        player_grid[y][x] = "[#]"
+                        self.ship_under_attack = (x, y)
+                        return "Hit!"
+                    elif player_grid[y][x] == "[#]" or player_grid[y][x] == "[o]":
+                        continue
+                    else:
+                        self.current_attack_offsets.remove(attack_offset)
+
+                        player_grid[y][x] = "[o]"
+                        attacked = True
+                        return "Miss"
+        else:
+            x = random.randint(0, 9)
+            y = random.randint(0, 9)
+            if player_grid[y][x] == "[@]":
+                player_grid[y][x] = "[#]"
+                self.ship_under_attack = (x, y)
+                return "Hit!"
+            else:
+                player_grid[y][x] = "[o]"
+                return "Miss!"

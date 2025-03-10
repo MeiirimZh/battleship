@@ -16,6 +16,8 @@ class DefaultGameScene:
                         [[0, 0], [0, 1], [0, 2], [0, 3]]]
         
         self.msg = ""
+        self.msg_2 = ""
+        self.turn_msg = ""
 
     def find_ship_orientation(self, ship: list):
         """
@@ -148,6 +150,8 @@ class DefaultGameScene:
             for j in range(10):
                 if self.grid[i][j] == "[@]":
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["CYAN"])
+                elif self.grid[i][j] == "[#]":
+                    stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["YELLOW"])
                 else:
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j])
     
