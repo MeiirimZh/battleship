@@ -14,7 +14,7 @@ class PlayerVsComputer(DefaultGameScene):
         self.x = 0
         self.y = 0
 
-        self.placing_ships = False
+        self.placing_ships = True
 
     def run(self, stdscr, colors):
         if self.placing_ships:
