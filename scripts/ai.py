@@ -3,7 +3,9 @@ import copy
 
 
 class AI:
-    def __init__(self):
+    def __init__(self, game_scene):
+        self.game = game_scene
+
         self.grid = [ ["[ ]" for j in range(10)] for i in range(10)]
 
         self.building_ships = [[[0, 0],], [[0, 0],], [[0, 0],], [[0, 0],],
@@ -18,7 +20,7 @@ class AI:
         self.init_ships = []
         self.ships = []
 
-        self.ship_under_attack = None
+        self.ship_under_attack = []
         self.attack_offsets = [[0, 1], [0, -1], [1, 0], [-1, 0]]
         self.current_attack_offsets = [[0, 1], [0, -1], [1, 0], [-1, 0]]
         
@@ -101,48 +103,23 @@ class AI:
                     ship_placed = True
         self.init_ships = copy.deepcopy(self.ships)
 
-    def find_ship(self, x, y):
-        for ship in self.init_ships:
-            for pos in ship:
-                if pos[0] == x and pos[1] == y:
-                    return ship
-
-    def ship_destroyed(self, x, y):
-        for ship in self.ships:
-            for pos in ship:
-                if pos[0] == x and pos[1] == y:
-                    ship.remove(pos)
-                    if len(ship) == 0:
-                        return self.find_ship(x, y)
-
     def attack(self, player_grid):
-        if self.ship_under_attack:
-            attacked = False
-            while not attacked:
-                attack_offset = random.choice(self.attack_offsets)
-                x, y = attack_offset
-                x += self.ship_under_attack[0]
-                y += self.ship_under_attack[1]
-                if 0 <= x <= 9 and 0 <= y <= 9:
-                    if player_grid[y][x] == "[@]":
-                        player_grid[y][x] = "[#]"
-                        self.ship_under_attack = (x, y)
-                        return "Hit!"
-                    elif player_grid[y][x] == "[#]" or player_grid[y][x] == "[o]":
-                        continue
-                    else:
-                        self.current_attack_offsets.remove(attack_offset)
-
-                        player_grid[y][x] = "[o]"
-                        attacked = True
-                        return "Miss"
-        else:
+        while True:
             x = random.randint(0, 9)
             y = random.randint(0, 9)
-            if player_grid[y][x] == "[@]":
-                player_grid[y][x] = "[#]"
-                self.ship_under_attack = (x, y)
-                return "Hit!"
-            else:
-                player_grid[y][x] = "[o]"
-                return "Miss!"
+            if player_grid[y][x] != "[o]" and player_grid[y][x] != "[#]":
+                if player_grid[y][x] == "[@]":
+                    player_grid[y][x] = "[#]"
+
+                    res = self.game.ship_destroyed(x, y, self.game.ships, self.game.init_ships)
+
+                    if res:
+                        self.game.destroy_ship(self.game.grid, res)
+
+                        return "Destroyed!"
+
+                    return "Hit!"
+                else:
+                    player_grid[y][x] = "[o]"
+
+                    return "Miss!"

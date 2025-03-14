@@ -1,3 +1,4 @@
+import copy
 import random
 import time
 
@@ -9,7 +10,7 @@ class PlayerVsComputer(DefaultGameScene):
     def __init__(self, game_state_manager):
         super().__init__(game_state_manager)
 
-        self.computer = AI()
+        self.computer = AI(self)
         self.computer.place_ships()
 
         self.computer_display_grid = [ ["[ ]" for j in range(10)] for i in range(10)]
@@ -18,6 +19,9 @@ class PlayerVsComputer(DefaultGameScene):
         self.y = 0
 
         self.placing_ships = True
+
+        self.ships = []
+        self.init_ships = []
 
         self.player_turn = random.choice([True, False])
 
@@ -53,8 +57,11 @@ class PlayerVsComputer(DefaultGameScene):
             if key.lower() == "r":
                 self.rotate_ship(self.building_ships[-1])
             if key in ["\n", "\r", "KEY_ENTER"]:
+                self.ships.append(self.building_ships[-1])
                 self.place_ship(self.building_ships[-1])
                 if not self.building_ships:
+                    self.init_ships = copy.deepcopy(self.ships)
+
                     self.placing_ships = False
         
         else:
@@ -101,7 +108,7 @@ class PlayerVsComputer(DefaultGameScene):
                         self.computer_display_grid[self.y][self.x] = "[#]"
                         self.computer.grid[self.y][self.x] = "[ ]"
 
-                        res = self.computer.ship_destroyed(self.x, self.y)
+                        res = self.ship_destroyed(self.x, self.y, self.computer.ships, self.computer.init_ships)
                         if res:
                             self.msg = "Player: Destroyed!"
                             self.destroy_ship(self.computer_display_grid, res)
@@ -117,8 +124,9 @@ class PlayerVsComputer(DefaultGameScene):
                 time.sleep(2)
 
                 attack = self.computer.attack(self.grid)
-                if attack == "Hit!":
-                    self.msg_2 = "Computer: Hit!"
-                else:
+                if attack == "Miss!":
                     self.msg_2 = ""
                     self.player_turn = True
+                    
+                else:
+                    self.msg_2 = attack

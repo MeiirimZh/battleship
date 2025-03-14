@@ -138,6 +138,20 @@ class DefaultGameScene:
                     if grid[offset_y][offset_x] == "[ ]":
                         grid[offset_y][offset_x] = "[o]"
 
+    def find_ship(self, x, y, ships_collection):
+        for ship in ships_collection:
+            for pos in ship:
+                if pos[0] == x and pos[1] == y:
+                    return ship
+    
+    def ship_destroyed(self, x, y, ships_collection, init_ships):
+        for ship in ships_collection:
+            for pos in ship:
+                if pos[0] == x and pos[1] == y:
+                    ship.remove(pos)
+                    if len(ship) == 0:
+                        return self.find_ship(x, y, init_ships)
+
     def print_markers(self, stdscr, a_offset, n_offset=0):
         for i in range(len(self.alphabet)):
                 stdscr.addstr(2, i * 3 + a_offset, self.alphabet[i])
@@ -152,6 +166,8 @@ class DefaultGameScene:
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["CYAN"])
                 elif self.grid[i][j] == "[#]":
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["YELLOW"])
+                elif self.grid[i][j] == "[x]":
+                    stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["RED"])
                 else:
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j])
     
