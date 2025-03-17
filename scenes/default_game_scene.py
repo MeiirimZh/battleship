@@ -162,11 +162,11 @@ class DefaultGameScene:
     def print_player_grid(self, stdscr, colors, players_grid):
         for i in range(10):
             for j in range(10):
-                if self.grid[i][j] == "[@]":
+                if players_grid[i][j] == "[@]":
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["CYAN"])
-                elif self.grid[i][j] == "[#]":
+                elif players_grid[i][j] == "[#]":
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["YELLOW"])
-                elif self.grid[i][j] == "[x]":
+                elif players_grid[i][j] == "[x]":
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["RED"])
                 else:
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j])

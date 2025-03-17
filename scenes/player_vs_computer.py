@@ -106,7 +106,7 @@ class PlayerVsComputer(DefaultGameScene):
                 if key in ["\n", "\r", "KEY_ENTER"]:
                     if self.computer.grid[self.y][self.x] == "[@]":
                         self.computer_display_grid[self.y][self.x] = "[#]"
-                        self.computer.grid[self.y][self.x] = "[ ]"
+                        self.computer.grid[self.y][self.x] = "[#]"
 
                         res = self.ship_destroyed(self.x, self.y, self.computer.ships, self.computer.init_ships)
                         if res:
@@ -114,7 +114,7 @@ class PlayerVsComputer(DefaultGameScene):
                             self.destroy_ship(self.computer_display_grid, res)
                         else:
                             self.msg = "Player: Hit!"
-                    else:
+                    elif self.computer.grid[self.y][self.x] == "[ ]":
                         self.computer_display_grid[self.y][self.x] = "[o]"
 
                         self.player_turn = False
@@ -122,7 +122,7 @@ class PlayerVsComputer(DefaultGameScene):
                     self.msg = ""
             else:
                 time.sleep(2)
-
+                
                 attack = self.computer.attack(self.grid)
                 if attack == "Miss!":
                     self.msg_2 = ""
