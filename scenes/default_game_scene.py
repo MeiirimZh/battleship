@@ -150,6 +150,8 @@ class DefaultGameScene:
                 if pos[0] == x and pos[1] == y:
                     ship.remove(pos)
                     if len(ship) == 0:
+                        ships_collection.remove(ship)
+
                         return self.find_ship(x, y, init_ships)
 
     def print_markers(self, stdscr, a_offset, n_offset=0):

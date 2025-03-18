@@ -7,8 +7,9 @@ from scripts.ai import AI
 
 
 class PlayerVsComputer(DefaultGameScene):
-    def __init__(self, game_state_manager):
+    def __init__(self, game_state_manager, game_over_scene):
         super().__init__(game_state_manager)
+        self.game_over_scene = game_over_scene
 
         self.computer = AI(self)
         self.computer.place_ships()
@@ -24,6 +25,9 @@ class PlayerVsComputer(DefaultGameScene):
         self.init_ships = []
 
         self.player_turn = random.choice([True, False])
+
+        self.player_wins = 0
+        self.computer_wins = 0
 
     def run(self, stdscr, colors):
         if self.placing_ships:
@@ -112,6 +116,13 @@ class PlayerVsComputer(DefaultGameScene):
                         if res:
                             self.msg = "Player: Destroyed!"
                             self.destroy_ship(self.computer_display_grid, res)
+
+                            if len(self.computer.ships) == 0:
+                                self.win = "Player"
+
+                                self.player_wins += 1
+                                self.game_over_scene.set_data("Player", "Player", "Computer", self.player_wins, self.computer_wins)
+                                self.game_state_manager.set_state("Game Over")
                         else:
                             self.msg = "Player: Hit!"
                     elif self.computer.grid[self.y][self.x] == "[ ]" and self.computer_display_grid[self.y][self.x] != "[o]":
@@ -131,3 +142,10 @@ class PlayerVsComputer(DefaultGameScene):
                     self.msg = ""
                 else:
                     self.msg_2 = f'Computer: {attack}'
+
+                    if len(self.ships) == 0:
+                        self.win = "Computer"
+
+                        self.computer_wins += 1
+                        self.game_over_scene.set_data("Computer", "Player", "Computer", self.player_wins, self.computer_wins)
+                        self.game_state_manager.set_state("Game Over")
