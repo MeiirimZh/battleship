@@ -127,6 +127,7 @@ class PlayerVsComputer(DefaultGameScene):
                 if attack == "Miss!":
                     self.msg_2 = ""
                     self.player_turn = True
-                    
+                elif attack == None:
+                    self.msg = ""
                 else:
-                    self.msg_2 = attack
+                    self.msg_2 = f'Computer: {attack}'
