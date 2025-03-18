@@ -114,7 +114,7 @@ class PlayerVsComputer(DefaultGameScene):
                             self.destroy_ship(self.computer_display_grid, res)
                         else:
                             self.msg = "Player: Hit!"
-                    elif self.computer.grid[self.y][self.x] == "[ ]":
+                    elif self.computer.grid[self.y][self.x] == "[ ]" and self.computer_display_grid[self.y][self.x] != "[o]":
                         self.computer_display_grid[self.y][self.x] = "[o]"
 
                         self.player_turn = False

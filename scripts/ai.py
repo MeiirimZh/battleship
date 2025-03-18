@@ -124,7 +124,7 @@ class AI:
                             self.current_attack_offsets = [offset]
                             self.ship_under_attack = [x, y]
                             return "Hit!"
-                        elif player_grid[y][x] == "[ ]" and player_grid[y][x] != "[x]":
+                        elif player_grid[y][x] == "[ ]":
                             player_grid[y][x] = "[o]"
                             return "Miss!"
                 self.current_attack_offsets[0][0] = -self.current_attack_offsets[0][0]
@@ -135,14 +135,12 @@ class AI:
             while True:
                 x = random.randint(0, 9)
                 y = random.randint(0, 9)
-                if player_grid[y][x] != "[o]" and player_grid[y][x] != "[#]":
+                if player_grid[y][x] != "[o]" and player_grid[y][x] != "[#]" and player_grid[y][x] != "[x]":
                     if player_grid[y][x] == "[@]":
                         player_grid[y][x] = "[#]"
                         res = self.game.ship_destroyed(x, y, self.game.ships, self.game.init_ships)
                         if res:
                             self.game.destroy_ship(self.game.grid, res)
-                            # self.ship_under_attack = []
-                            # self.first_ship_in_chain = []
                             return "Destroyed!"
                         self.ship_under_attack = [x, y]
                         self.first_ship_in_chain = [x, y]
