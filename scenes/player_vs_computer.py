@@ -76,7 +76,7 @@ class PlayerVsComputer(DefaultGameScene):
             key = stdscr.getkey()
 
             if key in ["KEY_LEFT", "KEY_RIGHT", "KEY_UP", "KEY_DOWN"]:
-                self.move_ship(self.building_ships[-1], key.split('_')[1].lower(), self.building_ships)
+                self.move_ship(self.building_ships[-1], key.split('_')[1].lower())
             if key.lower() == "r":
                 self.rotate_ship(self.building_ships[-1])
             if key in ["\n", "\r", "KEY_ENTER"]:

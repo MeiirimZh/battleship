@@ -67,7 +67,7 @@ class PlayerVsPlayer(DefaultGameScene):
             key = stdscr.getkey()
 
             if key in ["KEY_LEFT", "KEY_RIGHT", "KEY_UP", "KEY_DOWN"]:
-                self.move_ship(current_ship, key.split('_')[1].lower(), self.building_ships_dict[self.turn])
+                self.move_ship(current_ship, key.split('_')[1].lower())
             if key.lower() == "r":
                 self.rotate_ship(current_ship)
             if key in ["\n", "\r", "KEY_ENTER"]:

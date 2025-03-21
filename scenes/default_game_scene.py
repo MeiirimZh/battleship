@@ -61,20 +61,19 @@ class DefaultGameScene:
         if ship[1][1] > ship[0][1]:
             return "Vertical"
 
-    def move_ship(self, ship: list, direction: str, ship_collection: list):
+    def move_ship(self, ship: list, direction: str):
         """
         Moves given ship depending on the direction value
 
         Args:
             ship (list): list containing ship's positions
             direction (str): left, right, up or down
-            ship_collection (list): list, where given ship is contained
 
         Returns:
             void method. Changes the positions of ship
         """
 
-        ship_orientation = self.find_ship_orientation(ship_collection[-1])
+        ship_orientation = self.find_ship_orientation(ship)
 
         if ship_orientation == "Horizontal":
             width = len(ship)
@@ -111,7 +110,7 @@ class DefaultGameScene:
             void method. Changes the positions of ship 
         """
 
-        ship_orientation = self.find_ship_orientation(self.building_ships[-1])
+        ship_orientation = self.find_ship_orientation(ship)
         if ship_orientation != "Centered":
             if ship_orientation == "Vertical":
                 for pos in ship[1:]:
