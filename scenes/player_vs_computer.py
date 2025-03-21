@@ -29,6 +29,25 @@ class PlayerVsComputer(DefaultGameScene):
         self.player_wins = 0
         self.computer_wins = 0
 
+    def reset(self):
+        super().reset()
+
+        self.x = 0
+        self.y = 0
+
+        self.placing_ships = True
+
+        self.ships = []
+        self.init_ships = []
+
+        self.player_turn = random.choice([True, False])
+
+        self.computer.reset()
+
+        self.computer.place_ships()
+
+        self.computer_display_grid = [ ["[ ]" for j in range(10)] for i in range(10)]
+
     def run(self, stdscr, colors):
         if self.placing_ships:
             msg = "Ship position:"
@@ -61,8 +80,7 @@ class PlayerVsComputer(DefaultGameScene):
             if key.lower() == "r":
                 self.rotate_ship(self.building_ships[-1])
             if key in ["\n", "\r", "KEY_ENTER"]:
-                self.ships.append(self.building_ships[-1])
-                self.place_ship(self.building_ships[-1])
+                self.place_ship(self.building_ships[-1], self.ships)
                 if not self.building_ships:
                     self.init_ships = copy.deepcopy(self.ships)
 
@@ -76,6 +94,9 @@ class PlayerVsComputer(DefaultGameScene):
             self.print_markers(stdscr, 4)
             self.print_player_grid(stdscr, colors, self.grid)
             self.print_enemy_grid(stdscr, colors, self.computer_display_grid)
+
+            self.player_1_ships = f'Player ships: {self.ships_left(self.ships)}'
+            self.player_2_ships = f'Enemy ships: {self.ships_left(self.computer.ships)}'
 
             if self.player_turn:
                 self.turn_msg = "Your turn"
@@ -91,6 +112,15 @@ class PlayerVsComputer(DefaultGameScene):
 
             if self.msg_2:
                 stdscr.addstr(16, 0, self.msg_2)
+
+            if self.player_1_ships:
+                stdscr.addstr(17, 0, self.player_1_ships)
+
+            if self.player_2_ships:
+                stdscr.addstr(18, 0, self.player_2_ships)
+
+            if self.error_msg:
+                stdscr.addstr(20, 0, self.error_msg)
 
             self.print_markers(stdscr, 54, 50)
 
@@ -116,15 +146,14 @@ class PlayerVsComputer(DefaultGameScene):
                         if res:
                             self.msg = "Player: Destroyed!"
                             self.destroy_ship(self.computer_display_grid, res)
-
-                            if len(self.computer.ships) == 0:
-                                self.win = "Player"
-
+                            
+                            if self.all_ships_destroyed(self.computer.ships):
                                 self.player_wins += 1
                                 self.game_over_scene.set_data("Player", "Player", "Computer", self.player_wins, self.computer_wins)
                                 self.game_state_manager.set_state("Game Over")
                         else:
                             self.msg = "Player: Hit!"
+
                     elif self.computer.grid[self.y][self.x] == "[ ]" and self.computer_display_grid[self.y][self.x] != "[o]":
                         self.computer_display_grid[self.y][self.x] = "[o]"
 
@@ -142,10 +171,7 @@ class PlayerVsComputer(DefaultGameScene):
                     self.msg = ""
                 else:
                     self.msg_2 = f'Computer: {attack}'
-
-                    if len(self.ships) == 0:
-                        self.win = "Computer"
-
+                    if self.all_ships_destroyed(self.ships):
                         self.computer_wins += 1
                         self.game_over_scene.set_data("Computer", "Player", "Computer", self.player_wins, self.computer_wins)
                         self.game_state_manager.set_state("Game Over")

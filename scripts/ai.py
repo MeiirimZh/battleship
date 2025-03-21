@@ -25,6 +25,22 @@ class AI:
 
         self.attack_offsets = [[0, 1], [0, -1], [1, 0], [-1, 0]]
         self.current_attack_offsets = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+
+    def reset(self):
+        self.grid = [ ["[ ]" for j in range(10)] for i in range(10)]
+
+        self.building_ships = [[[0, 0],], [[0, 0],], [[0, 0],], [[0, 0],],
+                        [[0, 0], [0, 1]], [[0, 0], [0, 1]], [[0, 0], [0, 1]],
+                        [[0, 0], [0, 1], [0, 2]], [[0, 0], [0, 1], [0, 2]], 
+                        [[0, 0], [0, 1], [0, 2], [0, 3]]]
+        
+        self.init_ships = []
+        self.ships = []
+
+        self.ship_under_attack = []
+        self.first_ship_in_chain = []
+
+        self.current_attack_offsets = [[0, 1], [0, -1], [1, 0], [-1, 0]]
         
     def rotate_ship(self, ship):
         ship_orientation = self.find_ship_orientation(self.building_ships[-1])

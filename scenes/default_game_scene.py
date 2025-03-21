@@ -17,7 +17,31 @@ class DefaultGameScene:
         
         self.msg = ""
         self.msg_2 = ""
+
+        self.player_1_ships = ""
+        self.player_2_ships = ""
+
         self.turn_msg = ""
+
+        self.error_msg = ""
+
+    def reset(self):
+        self.grid = [ ["[ ]" for j in range(10)] for i in range(10)]
+
+        self.building_ships = [[[0, 0],], [[0, 0],], [[0, 0],], [[0, 0],],
+                        [[0, 0], [0, 1]], [[0, 0], [0, 1]], [[0, 0], [0, 1]],
+                        [[0, 0], [0, 1], [0, 2]], [[0, 0], [0, 1], [0, 2]], 
+                        [[0, 0], [0, 1], [0, 2], [0, 3]]]
+        
+        self.msg = ""
+        self.msg_2 = ""
+
+        self.player_1_ships = ""
+        self.player_2_ships = ""
+
+        self.turn_msg = ""
+
+        self.error_msg = ""
 
     def find_ship_orientation(self, ship: list):
         """
@@ -112,10 +136,11 @@ class DefaultGameScene:
                 for pos in ship:
                     pos[1] -= offset_y
 
-    def place_ship(self, ship: list):
+    def place_ship(self, ship: list, ship_collection: list):
         if not self.ship_contacts(ship):
             for pos in ship:
                 self.grid[pos[1]][pos[0]] = "[@]"
+            ship_collection.append(ship)
             self.building_ships.remove(ship)
 
     def ship_contacts(self, ship: list):
@@ -150,7 +175,7 @@ class DefaultGameScene:
                 if pos[0] == x and pos[1] == y:
                     ship.remove(pos)
                     if len(ship) == 0:
-                        ships_collection.remove(ship)
+                        ships_collection.remove([])
 
                         return self.find_ship(x, y, init_ships)
 
@@ -182,3 +207,9 @@ class DefaultGameScene:
                     stdscr.addstr(i+3, j*3+53, enemys_grid[i][j], colors["RED"])
                 else:
                     stdscr.addstr(i+3, j*3+53, enemys_grid[i][j])
+
+    def all_ships_destroyed(self, ship_collection: list):
+        return len(ship_collection) == 0
+
+    def ships_left(self, ship_collection: list):
+        return str(len(ship_collection))

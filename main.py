@@ -13,6 +13,7 @@ class Game:
         self.game_over = GameOver(self.game_state_manager)
         self.player_vs_computer = PlayerVsComputer(self.game_state_manager, self.game_over)
         self.player_vs_player = PlayerVsPlayer(self.game_state_manager)
+        self.game_over.set_game_scenes(self.player_vs_computer)
 
         self.scenes = {"Game Over": self.game_over, "Player vs Computer": self.player_vs_computer, 
                        "Player vs Player": self.player_vs_player}
