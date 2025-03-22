@@ -57,9 +57,9 @@ class PlayerVsComputer(DefaultGameScene):
             stdscr.addstr(0, 9, "Place the ships")
             self.print_markers(stdscr, 4)
             self.print_player_grid(stdscr, colors, self.grid)
-    
+
             for pos in self.building_ships[-1]:
-                if self.ship_contacts(self.building_ships[-1]):
+                if self.ship_contacts(self.building_ships[-1], self.grid):
                     stdscr.addstr(pos[1]+3, pos[0]*3+3, "[@]", colors["RED"])
                     msg = "You can't place a ship there!"
                 else:
@@ -80,10 +80,10 @@ class PlayerVsComputer(DefaultGameScene):
             if key.lower() == "r":
                 self.rotate_ship(self.building_ships[-1])
             if key in ["\n", "\r", "KEY_ENTER"]:
-                self.place_ship(self.building_ships[-1], self.ships)
+                self.place_ship(self.building_ships[-1], self.ships, self.building_ships, self.grid)
                 if not self.building_ships:
                     self.init_ships = copy.deepcopy(self.ships)
-
+                    
                     self.placing_ships = False
         
         else:

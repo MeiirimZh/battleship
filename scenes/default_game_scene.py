@@ -135,19 +135,19 @@ class DefaultGameScene:
                 for pos in ship:
                     pos[1] -= offset_y
 
-    def place_ship(self, ship: list, ship_collection: list):
-        if not self.ship_contacts(ship):
+    def place_ship(self, ship: list, ship_collection: list, building_ships: list, grid: list):
+        if not self.ship_contacts(ship, grid):
             for pos in ship:
-                self.grid[pos[1]][pos[0]] = "[@]"
+                grid[pos[1]][pos[0]] = "[@]"
             ship_collection.append(ship)
-            self.building_ships.remove(ship)
+            building_ships.remove(ship)
 
-    def ship_contacts(self, ship: list):
+    def ship_contacts(self, ship: list, grid: list):
         for pos in ship:
             for offset in self.offsets:
                 x = pos[0] + offset[0]
                 y = pos[1] + offset[1]
-                if 0 <= x < 10 and 0 <= y < 10 and self.grid[y][x] == "[@]":
+                if 0 <= x < 10 and 0 <= y < 10 and grid[y][x] == "[@]":
                     return True
 
     def destroy_ship(self, grid: list, ship: list):
