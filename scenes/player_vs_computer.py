@@ -95,8 +95,8 @@ class PlayerVsComputer(DefaultGameScene):
             self.print_player_grid(stdscr, colors, self.grid)
             self.print_enemy_grid(stdscr, colors, self.computer_display_grid)
 
-            self.player_1_ships = f'Player ships: {self.ships_left(self.ships)}'
-            self.player_2_ships = f'Enemy ships: {self.ships_left(self.computer.ships)}'
+            self.player_1_ships_msg = f'Player ships: {self.ships_left(self.ships)}'
+            self.player_2_ships_msg = f'Enemy ships: {self.ships_left(self.computer.ships)}'
 
             if self.player_turn:
                 self.turn_msg = "Your turn"
@@ -113,11 +113,11 @@ class PlayerVsComputer(DefaultGameScene):
             if self.msg_2:
                 stdscr.addstr(16, 0, self.msg_2)
 
-            if self.player_1_ships:
-                stdscr.addstr(17, 0, self.player_1_ships)
+            if self.player_1_ships_msg:
+                stdscr.addstr(17, 0, self.player_1_ships_msg)
 
-            if self.player_2_ships:
-                stdscr.addstr(18, 0, self.player_2_ships)
+            if self.player_2_ships_msg:
+                stdscr.addstr(18, 0, self.player_2_ships_msg)
 
             if self.error_msg:
                 stdscr.addstr(20, 0, self.error_msg)

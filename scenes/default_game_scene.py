@@ -18,8 +18,8 @@ class DefaultGameScene:
         self.msg = ""
         self.msg_2 = ""
 
-        self.player_1_ships = ""
-        self.player_2_ships = ""
+        self.player_1_ships_msg = ""
+        self.player_2_ships_msg = ""
 
         self.turn_msg = ""
 

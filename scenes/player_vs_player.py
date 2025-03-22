@@ -93,8 +93,34 @@ class PlayerVsPlayer(DefaultGameScene):
                     
                     self.placing_ships = False
 
+                    self.turn = random.choice(["Player 1", "Player 2"])
+
         else:
-            pass
+            stdscr.clear()
+
+            stdscr.addstr(0, 12, "Your grid")
+            stdscr.addstr(0, 62, "Enemy grid")
+            self.print_markers(stdscr, 4)
+            self.print_player_grid(stdscr, colors, self.grid)
+
+            self.player_1_ships_msg = f'Player 1 ships: {self.ships_left(self.player_1_ships)}'
+            self.player_2_ships_msg = f'Player 2 ships: {self.ships_left(self.player_2_ships)}'
+
+
+            if self.turn == "Player 1":
+                self.turn_msg = "Player 1's turn"
+            else:
+                self.turn_msg = "Player 2's turn"
+
+            stdscr.addstr(14, 0, self.turn_msg)
+
+            if self.player_1_ships_msg:
+                stdscr.addstr(17, 0, self.player_1_ships_msg)
+
+            if self.player_2_ships_msg:
+                stdscr.addstr(18, 0, self.player_2_ships_msg)
+
+            stdscr.refresh()
 
     def continue_action(self, stdscr):
         stdscr.addstr(19, 0, "Press [Enter] to continue")
