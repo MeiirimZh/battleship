@@ -133,7 +133,7 @@ class AI:
                             player_grid[y][x] = "[#]"
                             res = self.game.ship_destroyed(x, y, self.game.ships, self.game.init_ships)
                             if res:
-                                self.game.destroy_ship(self.game.grid, res)
+                                self.game.destroy_ship(player_grid, res)
                                 self.ship_under_attack = []
                                 self.current_attack_offsets = copy.deepcopy(self.attack_offsets)
                                 return "Destroyed!"
@@ -156,7 +156,7 @@ class AI:
                         player_grid[y][x] = "[#]"
                         res = self.game.ship_destroyed(x, y, self.game.ships, self.game.init_ships)
                         if res:
-                            self.game.destroy_ship(self.game.grid, res)
+                            self.game.destroy_ship(player_grid, res)
                             return "Destroyed!"
                         self.ship_under_attack = [x, y]
                         self.first_ship_in_chain = [x, y]
