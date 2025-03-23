@@ -25,23 +25,23 @@ class DefaultGameScene:
 
         self.error_msg = ""
 
-    # def reset(self):
-    #     self.grid = [ ["[ ]" for j in range(10)] for i in range(10)]
+    def reset(self):
+        self.grid = [ ["[ ]" for j in range(10)] for i in range(10)]
 
-    #     self.building_ships = [[[0, 0],], [[0, 0],], [[0, 0],], [[0, 0],],
-    #                     [[0, 0], [0, 1]], [[0, 0], [0, 1]], [[0, 0], [0, 1]],
-    #                     [[0, 0], [0, 1], [0, 2]], [[0, 0], [0, 1], [0, 2]], 
-    #                     [[0, 0], [0, 1], [0, 2], [0, 3]]]
+        self.building_ships = [[[0, 0],], [[0, 0],], [[0, 0],], [[0, 0],],
+                        [[0, 0], [0, 1]], [[0, 0], [0, 1]], [[0, 0], [0, 1]],
+                        [[0, 0], [0, 1], [0, 2]], [[0, 0], [0, 1], [0, 2]], 
+                        [[0, 0], [0, 1], [0, 2], [0, 3]]]
         
-    #     self.msg = ""
-    #     self.msg_2 = ""
+        self.msg = ""
+        self.msg_2 = ""
 
-    #     self.player_1_ships = ""
-    #     self.player_2_ships = ""
+        self.player_1_ships = ""
+        self.player_2_ships = ""
 
-    #     self.turn_msg = ""
+        self.turn_msg = ""
 
-    #     self.error_msg = ""
+        self.error_msg = ""
 
     def find_ship_orientation(self, ship: list):
         """

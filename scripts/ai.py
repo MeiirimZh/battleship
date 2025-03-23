@@ -121,7 +121,7 @@ class AI:
                     ship_placed = True
         self.init_ships = copy.deepcopy(self.ships)
 
-    def attack(self, player_grid):
+    def attack(self, player_grid, ships_collection, init_ships_collection):
         if self.ship_under_attack:
             while True:
                 random.shuffle(self.current_attack_offsets)
@@ -131,7 +131,7 @@ class AI:
                     if 0 <= x <= 9 and 0 <= y <= 9:
                         if player_grid[y][x] == "[@]":
                             player_grid[y][x] = "[#]"
-                            res = self.game.ship_destroyed(x, y, self.game.ships, self.game.init_ships)
+                            res = self.game.ship_destroyed(x, y, ships_collection, init_ships_collection)
                             if res:
                                 self.game.destroy_ship(player_grid, res)
                                 self.ship_under_attack = []
@@ -154,7 +154,7 @@ class AI:
                 if player_grid[y][x] != "[o]" and player_grid[y][x] != "[#]" and player_grid[y][x] != "[x]":
                     if player_grid[y][x] == "[@]":
                         player_grid[y][x] = "[#]"
-                        res = self.game.ship_destroyed(x, y, self.game.ships, self.game.init_ships)
+                        res = self.game.ship_destroyed(x, y, ships_collection, init_ships_collection)
                         if res:
                             self.game.destroy_ship(player_grid, res)
                             return "Destroyed!"

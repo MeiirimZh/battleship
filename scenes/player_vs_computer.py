@@ -11,8 +11,6 @@ class PlayerVsComputer(DefaultGameScene):
         super().__init__(game_state_manager)
         self.game_over_scene = game_over_scene
 
-        self.player_grid = copy.deepcopy(self.grid)
-
         self.computer = AI(self)
         self.computer.place_ships()
         
@@ -30,7 +28,7 @@ class PlayerVsComputer(DefaultGameScene):
         self.computer_wins = 0
 
     def reset(self):
-        self.player_grid = copy.deepcopy(self.grid)
+        super().reset()
         
         self.x = 0
         self.y = 0
@@ -54,10 +52,10 @@ class PlayerVsComputer(DefaultGameScene):
 
             stdscr.addstr(0, 9, "Place the ships")
             self.print_markers(stdscr, 4)
-            self.print_player_grid(stdscr, colors, self.player_grid)
+            self.print_player_grid(stdscr, colors, self.grid)
 
             for pos in self.building_ships[-1]:
-                if self.ship_contacts(self.building_ships[-1], self.player_grid):
+                if self.ship_contacts(self.building_ships[-1], self.grid):
                     stdscr.addstr(pos[1]+3, pos[0]*3+3, "[@]", colors["RED"])
                     msg = "You can't place a ship there!"
                 else:
@@ -78,7 +76,7 @@ class PlayerVsComputer(DefaultGameScene):
             if key.lower() == "r":
                 self.rotate_ship(self.building_ships[-1])
             if key in ["\n", "\r", "KEY_ENTER"]:
-                self.place_ship(self.building_ships[-1], self.ships, self.building_ships, self.player_grid)
+                self.place_ship(self.building_ships[-1], self.ships, self.building_ships, self.grid)
                 if not self.building_ships:
                     self.init_ships = copy.deepcopy(self.ships)
                     
@@ -92,7 +90,7 @@ class PlayerVsComputer(DefaultGameScene):
             stdscr.addstr(0, 12, "Your grid")
             stdscr.addstr(0, 62, "Enemy grid")
             self.print_markers(stdscr, 4)
-            self.print_player_grid(stdscr, colors, self.player_grid)
+            self.print_player_grid(stdscr, colors, self.grid)
             self.print_enemy_grid(stdscr, colors, self.computer.grid)
 
             self.player_1_ships_msg = f'Player ships: {self.ships_left(self.ships)}'
@@ -164,7 +162,7 @@ class PlayerVsComputer(DefaultGameScene):
             else:
                 time.sleep(2)
                 
-                attack = self.computer.attack(self.player_grid)
+                attack = self.computer.attack(self.grid, self.ships, self.init_ships)
                 if attack == "Miss!":
                     self.msg_2 = ""
                     self.player_turn = True
