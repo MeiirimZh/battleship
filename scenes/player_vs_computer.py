@@ -149,7 +149,7 @@ class PlayerVsComputer(DefaultGameScene):
                             
                             if self.all_ships_destroyed(self.computer.ships):
                                 self.player_wins += 1
-                                self.game_over_scene.set_data("Player", "Player", "Computer", self.player_wins, self.computer_wins)
+                                self.game_over_scene.set_data("Player", "Player", "Computer", self.player_wins, self.computer_wins, "Player vs Computer")
                                 self.game_state_manager.set_state("Game Over")
                         else:
                             self.msg = "Player: Hit!"
@@ -173,5 +173,5 @@ class PlayerVsComputer(DefaultGameScene):
                     self.msg_2 = f'Computer: {attack}'
                     if self.all_ships_destroyed(self.ships):
                         self.computer_wins += 1
-                        self.game_over_scene.set_data("Computer", "Player", "Computer", self.player_wins, self.computer_wins)
+                        self.game_over_scene.set_data("Computer", "Player", "Computer", self.player_wins, self.computer_wins, "Player vs Computer")
                         self.game_state_manager.set_state("Game Over")
