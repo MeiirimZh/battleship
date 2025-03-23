@@ -34,5 +34,7 @@ class MainMenu:
                 self.game_state_manager.set_state("Player vs Computer")
             elif self.current_option == 1:
                 self.game_state_manager.set_state("Player vs Player")
+            elif self.current_option == 2:
+                self.game_state_manager.set_state("Settings")
             else:
                 exit()
