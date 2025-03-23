@@ -94,6 +94,8 @@ class PlayerVsPlayer(DefaultGameScene):
                 self.move_ship(current_ship, key.split('_')[1].lower())
             if key.lower() == "r":
                 self.rotate_ship(current_ship)
+            if key == "\x1b":
+                self.game_state_manager.set_state("Main Menu")
             if key in ["\n", "\r", "KEY_ENTER"]:
                 self.place_ship(current_ship, self.ships_dict[self.turn], self.building_ships_dict[self.turn], self.grids_dict[self.turn])
 
@@ -171,6 +173,8 @@ class PlayerVsPlayer(DefaultGameScene):
                 self.y = max(0, self.y - 1)
             if key == "KEY_DOWN":
                 self.y = min(9, self.y + 1)
+            if key == "\x1b":
+                self.game_state_manager.set_state("Main Menu")
             if key in ["\n", "\r", "KEY_ENTER"]:
                 if self.grids_dict[opponent][self.y][self.x] == "[@]":
                     self.grids_dict[opponent][self.y][self.x] = "[#]"

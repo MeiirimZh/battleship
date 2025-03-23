@@ -85,6 +85,8 @@ class PlayerVsComputer(DefaultGameScene):
                     self.init_ships = copy.deepcopy(self.ships)
                     
                     self.placing_ships = False
+            if key == "\x1b":
+                self.game_state_manager.set_state("Main Menu")
         
         else:
             stdscr.clear()
@@ -137,6 +139,8 @@ class PlayerVsComputer(DefaultGameScene):
                     self.y = max(0, self.y - 1)
                 if key == "KEY_DOWN":
                     self.y = min(9, self.y + 1)
+                if key == "\x1b":
+                    self.game_state_manager.set_state("Main Menu")
                 if key in ["\n", "\r", "KEY_ENTER"]:
                     if self.computer.grid[self.y][self.x] == "[@]":
                         self.computer_display_grid[self.y][self.x] = "[#]"
