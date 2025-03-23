@@ -197,6 +197,16 @@ class DefaultGameScene:
                 else:
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j])
     
+    # def print_enemy_grid(self, stdscr, colors, enemys_grid):
+    #     for i in range(10):
+    #         for j in range(10):
+    #             if enemys_grid[i][j] == "[#]":
+    #                 stdscr.addstr(i+3, j*3+53, enemys_grid[i][j], colors["YELLOW"])
+    #             elif enemys_grid[i][j] == "[x]":
+    #                 stdscr.addstr(i+3, j*3+53, enemys_grid[i][j], colors["RED"])
+    #             else:
+    #                 stdscr.addstr(i+3, j*3+53, enemys_grid[i][j])
+
     def print_enemy_grid(self, stdscr, colors, enemys_grid):
         for i in range(10):
             for j in range(10):
@@ -204,8 +214,10 @@ class DefaultGameScene:
                     stdscr.addstr(i+3, j*3+53, enemys_grid[i][j], colors["YELLOW"])
                 elif enemys_grid[i][j] == "[x]":
                     stdscr.addstr(i+3, j*3+53, enemys_grid[i][j], colors["RED"])
-                else:
+                elif enemys_grid[i][j] == "[o]" or enemys_grid[i][j] == "[ ]":
                     stdscr.addstr(i+3, j*3+53, enemys_grid[i][j])
+                else:
+                    stdscr.addstr(i+3, j*3+53, "[ ]")
 
     def all_ships_destroyed(self, ship_collection: list):
         return len(ship_collection) == 0

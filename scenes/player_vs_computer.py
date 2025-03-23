@@ -93,7 +93,7 @@ class PlayerVsComputer(DefaultGameScene):
             stdscr.addstr(0, 62, "Enemy grid")
             self.print_markers(stdscr, 4)
             self.print_player_grid(stdscr, colors, self.grid)
-            self.print_enemy_grid(stdscr, colors, self.computer_display_grid)
+            self.print_enemy_grid(stdscr, colors, self.computer.grid)
 
             self.player_1_ships_msg = f'Player ships: {self.ships_left(self.ships)}'
             self.player_2_ships_msg = f'Enemy ships: {self.ships_left(self.computer.ships)}'

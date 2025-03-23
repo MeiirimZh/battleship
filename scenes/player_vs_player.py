@@ -13,10 +13,8 @@ class PlayerVsPlayer(DefaultGameScene):
         self.player_2_grid = copy.deepcopy(self.grid)
         self.grids_dict = {"Player 1": self.player_1_grid, "Player 2": self.player_2_grid}
 
-        self.player_1_x = 0
-        self.player_1_y = 0
-        self.player_2_x = 0
-        self.player_2_y = 0
+        self.x = 0
+        self.y = 0
 
         self.player_1_ships = []
         self.player_1_init_ships = []
@@ -86,6 +84,7 @@ class PlayerVsPlayer(DefaultGameScene):
 
                 if not self.player_2_building_ships:
                     self.player_2_init_ships = copy.deepcopy(self.player_2_ships)
+                    self.init_ships_dict = {"Player 1": self.player_1_init_ships, "Player 2": self.player_2_init_ships}
 
                     self.print_player_grid(stdscr, colors, self.player_2_grid)
 
@@ -101,18 +100,27 @@ class PlayerVsPlayer(DefaultGameScene):
             stdscr.addstr(0, 12, "Your grid")
             stdscr.addstr(0, 62, "Enemy grid")
             self.print_markers(stdscr, 4)
-            self.print_player_grid(stdscr, colors, self.grid)
+            self.print_markers(stdscr, 54, 50)
+            self.print_player_grid(stdscr, colors, self.grids_dict[self.turn])
+            if self.turn == "Player 1":
+                self.print_enemy_grid(stdscr, colors, self.player_2_grid)
+            else:
+                self.print_enemy_grid(stdscr, colors, self.player_1_grid)
 
             self.player_1_ships_msg = f'Player 1 ships: {self.ships_left(self.player_1_ships)}'
             self.player_2_ships_msg = f'Player 2 ships: {self.ships_left(self.player_2_ships)}'
-
 
             if self.turn == "Player 1":
                 self.turn_msg = "Player 1's turn"
             else:
                 self.turn_msg = "Player 2's turn"
 
+            stdscr.addstr(self.y+3, self.x*3+53, "[+]", colors["CYAN"])
+
             stdscr.addstr(14, 0, self.turn_msg)
+
+            if self.msg:
+                stdscr.addstr(15, 0, self.msg)
 
             if self.player_1_ships_msg:
                 stdscr.addstr(17, 0, self.player_1_ships_msg)
@@ -121,6 +129,38 @@ class PlayerVsPlayer(DefaultGameScene):
                 stdscr.addstr(18, 0, self.player_2_ships_msg)
 
             stdscr.refresh()
+
+            key = stdscr.getkey()
+
+            opponent = "Player 2" if self.turn == "Player 1" else "Player 1"
+
+            if key == "KEY_LEFT":
+                self.x = max(0, self.x - 1)
+            if key == "KEY_RIGHT":
+                self.x = min(9, self.x + 1)
+            if key == "KEY_UP":
+                self.y = max(0, self.y - 1)
+            if key == "KEY_DOWN":
+                self.y = min(9, self.y + 1)
+            if key in ["\n", "\r", "KEY_ENTER"]:
+                if self.grids_dict[opponent][self.y][self.x] == "[@]":
+                    self.grids_dict[opponent][self.y][self.x] = "[#]"
+
+                    res = self.ship_destroyed(self.x, self.y, self.ships_dict[opponent], self.init_ships_dict[opponent])
+
+                    if res:
+                        self.msg = "Destroyed!"
+                        self.destroy_ship(self.grids_dict[opponent], res)
+                    else:
+                        self.msg = "Hit!"
+                elif self.grids_dict[opponent][self.y][self.x] == "[ ]" and self.grids_dict[opponent][self.y][self.x] != "[o]":
+                    self.grids_dict[opponent][self.y][self.x] = "[o]"
+
+                    self.continue_action(stdscr)
+
+                    self.turn = opponent
+            else:
+                self.msg = ""
 
     def continue_action(self, stdscr):
         stdscr.addstr(19, 0, "Press [Enter] to continue")
