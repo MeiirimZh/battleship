@@ -13,8 +13,6 @@ class PlayerVsComputer(DefaultGameScene):
 
         self.computer = AI(self)
         self.computer.place_ships()
-
-        self.computer_display_grid = [ ["[ ]" for j in range(10)] for i in range(10)]
         
         self.x = 0
         self.y = 0
@@ -45,8 +43,6 @@ class PlayerVsComputer(DefaultGameScene):
         self.computer.reset()
 
         self.computer.place_ships()
-
-        self.computer_display_grid = [ ["[ ]" for j in range(10)] for i in range(10)]
 
     def run(self, stdscr, colors):
         if self.placing_ships:
@@ -143,13 +139,12 @@ class PlayerVsComputer(DefaultGameScene):
                     self.game_state_manager.set_state("Main Menu")
                 if key in ["\n", "\r", "KEY_ENTER"]:
                     if self.computer.grid[self.y][self.x] == "[@]":
-                        self.computer_display_grid[self.y][self.x] = "[#]"
                         self.computer.grid[self.y][self.x] = "[#]"
 
                         res = self.ship_destroyed(self.x, self.y, self.computer.ships, self.computer.init_ships)
                         if res:
                             self.msg = "Player: Destroyed!"
-                            self.destroy_ship(self.computer_display_grid, res)
+                            self.destroy_ship(self.computer.grid, res)
                             
                             if self.all_ships_destroyed(self.computer.ships):
                                 self.player_wins += 1
@@ -158,8 +153,8 @@ class PlayerVsComputer(DefaultGameScene):
                         else:
                             self.msg = "Player: Hit!"
 
-                    elif self.computer.grid[self.y][self.x] == "[ ]" and self.computer_display_grid[self.y][self.x] != "[o]":
-                        self.computer_display_grid[self.y][self.x] = "[o]"
+                    elif self.computer.grid[self.y][self.x] == "[ ]" and self.computer.grid[self.y][self.x] != "[o]":
+                        self.computer.grid[self.y][self.x] = "[o]"
 
                         self.player_turn = False
                 else:

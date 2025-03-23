@@ -59,6 +59,6 @@ class GameOver:
                     self.player_vs_player.reset()
                     self.game_state_manager.set_state(self.game_scene)
             elif self.current_option == 1:
-                pass
+                self.game_state_manager.set_state("Main Menu")
             else:
                 exit()
