@@ -2,6 +2,7 @@ import curses
 import time
 from curses import wrapper
 
+from data import Data
 from scenes.main_menu import MainMenu
 from scenes.settings import Settings
 from scenes.game_over import GameOver
@@ -12,8 +13,9 @@ from scenes.player_vs_player import PlayerVsPlayer
 class Game:
     def __init__(self):
         self.game_state_manager = GameStateManager("Main Menu")
+        self.data = Data()
         self.main_menu = MainMenu(self.game_state_manager)
-        self.settings = Settings(self.game_state_manager)
+        self.settings = Settings(self.game_state_manager, self.data)
         self.game_over = GameOver(self.game_state_manager)
         self.player_vs_computer = PlayerVsComputer(self.game_state_manager, self.game_over)
         self.player_vs_player = PlayerVsPlayer(self.game_state_manager, self.game_over)
