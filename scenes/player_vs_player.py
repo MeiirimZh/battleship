@@ -5,8 +5,8 @@ from scenes.default_game_scene import DefaultGameScene
 
 
 class PlayerVsPlayer(DefaultGameScene):
-    def __init__(self, game_state_manager, game_over_scene):
-        super().__init__(game_state_manager)
+    def __init__(self, game_state_manager, data, game_over_scene):
+        super().__init__(game_state_manager, data)
         self.game_over_scene = game_over_scene
 
         self.player_1_grid = copy.deepcopy(self.grid)

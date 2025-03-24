@@ -1,6 +1,7 @@
 class DefaultGameScene:
-    def __init__(self, game_state_manager):
+    def __init__(self, game_state_manager, data):
         self.game_state_manager = game_state_manager
+        self.data = data
 
         self.grid = [ ["[ ]" for j in range(10)] for i in range(10)]
 
@@ -138,7 +139,7 @@ class DefaultGameScene:
     def place_ship(self, ship: list, ship_collection: list, building_ships: list, grid: list):
         if not self.ship_contacts(ship, grid):
             for pos in ship:
-                grid[pos[1]][pos[0]] = "[@]"
+                grid[pos[1]][pos[0]] = self.data.ship_marker
             ship_collection.append(ship)
             building_ships.remove(ship)
 
@@ -147,7 +148,7 @@ class DefaultGameScene:
             for offset in self.offsets:
                 x = pos[0] + offset[0]
                 y = pos[1] + offset[1]
-                if 0 <= x < 10 and 0 <= y < 10 and grid[y][x] == "[@]":
+                if 0 <= x < 10 and 0 <= y < 10 and grid[y][x] == self.data.ship_marker:
                     return True
 
     def destroy_ship(self, grid: list, ship: list):
@@ -188,7 +189,7 @@ class DefaultGameScene:
     def print_player_grid(self, stdscr, colors, players_grid):
         for i in range(10):
             for j in range(10):
-                if players_grid[i][j] == "[@]":
+                if players_grid[i][j] == self.data.ship_marker:
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["CYAN"])
                 elif players_grid[i][j] == "[#]":
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["YELLOW"])
@@ -196,16 +197,6 @@ class DefaultGameScene:
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["RED"])
                 else:
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j])
-    
-    # def print_enemy_grid(self, stdscr, colors, enemys_grid):
-    #     for i in range(10):
-    #         for j in range(10):
-    #             if enemys_grid[i][j] == "[#]":
-    #                 stdscr.addstr(i+3, j*3+53, enemys_grid[i][j], colors["YELLOW"])
-    #             elif enemys_grid[i][j] == "[x]":
-    #                 stdscr.addstr(i+3, j*3+53, enemys_grid[i][j], colors["RED"])
-    #             else:
-    #                 stdscr.addstr(i+3, j*3+53, enemys_grid[i][j])
 
     def print_enemy_grid(self, stdscr, colors, enemys_grid):
         for i in range(10):

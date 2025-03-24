@@ -7,8 +7,8 @@ from scripts.ai import AI
 
 
 class PlayerVsComputer(DefaultGameScene):
-    def __init__(self, game_state_manager, game_over_scene):
-        super().__init__(game_state_manager)
+    def __init__(self, game_state_manager, data, game_over_scene):
+        super().__init__(game_state_manager, data)
         self.game_over_scene = game_over_scene
 
         self.computer = AI(self)
@@ -56,10 +56,10 @@ class PlayerVsComputer(DefaultGameScene):
 
             for pos in self.building_ships[-1]:
                 if self.ship_contacts(self.building_ships[-1], self.grid):
-                    stdscr.addstr(pos[1]+3, pos[0]*3+3, "[@]", colors["RED"])
+                    stdscr.addstr(pos[1]+3, pos[0]*3+3, self.data.ship_marker, colors["RED"])
                     msg = "You can't place a ship there!"
                 else:
-                    stdscr.addstr(pos[1]+3, pos[0]*3+3, "[@]", colors["GREEN"])
+                    stdscr.addstr(pos[1]+3, pos[0]*3+3, self.data.ship_marker, colors["GREEN"])
 
             for i in range(len(self.building_ships[-1])):
                 stdscr.addstr(i+16, 0, ", ".join([str(x + 1) for x in self.building_ships[-1][i]]))

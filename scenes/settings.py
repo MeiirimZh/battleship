@@ -50,7 +50,7 @@ class Settings:
             stdscr.addstr(2, 0, f'{self.marker_names[self.current_marker]}, currently used:')
             stdscr.addstr(2, len(f'{self.marker_names[self.current_marker]}, currently used:') + 1,
                           self.markers[self.current_marker], colors["YELLOW"])
-            stdscr.addstr(4, 0, "Enter a new marker:")
+            stdscr.addstr(4, 0, "Enter a new marker ([Enter] to skip):")
 
             for i in range(len(self.markers)):
                 stdscr.addstr(i+8, 0, f'{self.marker_names[i]}: {self.markers[i]}')
@@ -58,26 +58,11 @@ class Settings:
             marker_changed = False
 
             while not marker_changed:
-                stdscr.addstr(4, 20, " ")
+                stdscr.addstr(4, 38, " ")
 
-                new_marker = stdscr.getstr(4, 20, 1).decode("utf-8")
+                new_marker = stdscr.getstr(4, 38, 1).decode("utf-8")
 
-                if f'[{new_marker}]' in self.markers:
-                    stdscr.addstr(6, 0, f"Marker [{new_marker}] already exists! Try again.", colors["RED"])
-                    stdscr.refresh()
-                    continue
-                else:
-                    if self.current_marker == 0:
-                        self.data.ship_marker = f'[{new_marker}]'
-                    elif self.current_marker == 1:
-                        self.data.hit_marker = f'[{new_marker}]'
-                    elif self.current_marker == 2:
-                        self.data.destroyed_marker = f'[{new_marker}]'
-                    else:
-                        self.data.miss_marker = f'[{new_marker}]'
-
-                    self.markers = [self.data.ship_marker, self.data.hit_marker, self.data.destroyed_marker, self.data.miss_marker]
-                    
+                if new_marker == "":
                     if self.current_marker == len(self.markers) - 1:
                         stdscr.clear()
 
@@ -99,5 +84,43 @@ class Settings:
                         self.current_marker += 1
 
                     marker_changed = True
+                else:
+                    if f'[{new_marker}]' in self.markers:
+                        stdscr.addstr(6, 0, f"Marker [{new_marker}] already exists! Try again.", colors["RED"])
+                        stdscr.refresh()
+                        continue
+                    else:
+                        if self.current_marker == 0:
+                            self.data.ship_marker = f'[{new_marker}]'
+                        elif self.current_marker == 1:
+                            self.data.hit_marker = f'[{new_marker}]'
+                        elif self.current_marker == 2:
+                            self.data.destroyed_marker = f'[{new_marker}]'
+                        else:
+                            self.data.miss_marker = f'[{new_marker}]'
+
+                        self.markers = [self.data.ship_marker, self.data.hit_marker, self.data.destroyed_marker, self.data.miss_marker]
+
+                        if self.current_marker == len(self.markers) - 1:
+                            stdscr.clear()
+
+                            for i in range(len(self.markers)):
+                                stdscr.addstr(i, 0, f'{self.marker_names[i]}: {self.markers[i]}')
+
+                            stdscr.addstr(len(self.markers)+1, 0, "Settings saved. Press [Enter] to return to Settings.")
+
+                            stdscr.refresh()
+
+                            key = stdscr.getkey()
+
+                            while key not in ["\n", "\r", "KEY_ENTER"]:
+                                key = stdscr.getkey()
+
+                            self.current_marker = 0
+                            self.current_state = "Choice"
+                        else:
+                            self.current_marker += 1
+
+                        marker_changed = True
 
             stdscr.refresh()
