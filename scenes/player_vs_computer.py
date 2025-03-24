@@ -11,7 +11,7 @@ class PlayerVsComputer(DefaultGameScene):
         super().__init__(game_state_manager, data)
         self.game_over_scene = game_over_scene
 
-        self.computer = AI(self)
+        self.computer = AI(self, self.data)
         self.computer.place_ships()
         
         self.x = 0
@@ -138,8 +138,8 @@ class PlayerVsComputer(DefaultGameScene):
                 if key == "\x1b":
                     self.game_state_manager.set_state("Main Menu")
                 if key in ["\n", "\r", "KEY_ENTER"]:
-                    if self.computer.grid[self.y][self.x] == "[@]":
-                        self.computer.grid[self.y][self.x] = "[#]"
+                    if self.computer.grid[self.y][self.x] == self.data.ship_marker:
+                        self.computer.grid[self.y][self.x] = self.data.hit_marker
 
                         res = self.ship_destroyed(self.x, self.y, self.computer.ships, self.computer.init_ships)
                         if res:
@@ -153,8 +153,8 @@ class PlayerVsComputer(DefaultGameScene):
                         else:
                             self.msg = "Player: Hit!"
 
-                    elif self.computer.grid[self.y][self.x] == "[ ]" and self.computer.grid[self.y][self.x] != "[o]":
-                        self.computer.grid[self.y][self.x] = "[o]"
+                    elif self.computer.grid[self.y][self.x] == "[ ]" and self.computer.grid[self.y][self.x] != self.data.miss_marker:
+                        self.computer.grid[self.y][self.x] = self.data.miss_marker
 
                         self.player_turn = False
                 else:

@@ -75,10 +75,10 @@ class PlayerVsPlayer(DefaultGameScene):
 
             for pos in current_ship:
                 if self.ship_contacts(current_ship, self.grids_dict[self.turn]):
-                    stdscr.addstr(pos[1]+3, pos[0]*3+3, "[@]", colors["RED"])
+                    stdscr.addstr(pos[1]+3, pos[0]*3+3, self.data.ship_marker, colors["RED"])
                     msg = "You can't place a ship there!"
                 else:
-                    stdscr.addstr(pos[1]+3, pos[0]*3+3, "[@]", colors["GREEN"])
+                    stdscr.addstr(pos[1]+3, pos[0]*3+3, self.data.ship_marker, colors["GREEN"])
 
             for i in range(len(self.building_ships_dict[self.turn][-1])):
                 stdscr.addstr(i+16, 0, ", ".join([str(x + 1) for x in current_ship[i]]))
@@ -176,8 +176,8 @@ class PlayerVsPlayer(DefaultGameScene):
             if key == "\x1b":
                 self.game_state_manager.set_state("Main Menu")
             if key in ["\n", "\r", "KEY_ENTER"]:
-                if self.grids_dict[opponent][self.y][self.x] == "[@]":
-                    self.grids_dict[opponent][self.y][self.x] = "[#]"
+                if self.grids_dict[opponent][self.y][self.x] == self.data.ship_marker:
+                    self.grids_dict[opponent][self.y][self.x] = self.data.hit_marker
 
                     res = self.ship_destroyed(self.x, self.y, self.ships_dict[opponent], self.init_ships_dict[opponent])
 
@@ -195,8 +195,8 @@ class PlayerVsPlayer(DefaultGameScene):
                             self.game_state_manager.set_state("Game Over")
                     else:
                         self.msg = "Hit!"
-                elif self.grids_dict[opponent][self.y][self.x] == "[ ]" and self.grids_dict[opponent][self.y][self.x] != "[o]":
-                    self.grids_dict[opponent][self.y][self.x] = "[o]"
+                elif self.grids_dict[opponent][self.y][self.x] == "[ ]" and self.grids_dict[opponent][self.y][self.x] != self.data.miss_marker:
+                    self.grids_dict[opponent][self.y][self.x] = self.data.miss_marker
 
                     self.continue_action(stdscr, 19)
 

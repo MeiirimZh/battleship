@@ -153,7 +153,7 @@ class DefaultGameScene:
 
     def destroy_ship(self, grid: list, ship: list):
         for pos in ship:
-            grid[pos[1]][pos[0]] = "[x]"
+            grid[pos[1]][pos[0]] = self.data.destroyed_marker
         
         for pos in ship:
             for offset in self.offsets:
@@ -161,7 +161,7 @@ class DefaultGameScene:
                 offset_y = pos[1] + offset[1]
                 if 0 <= offset_x <= 9 and 0 <= offset_y <= 9:
                     if grid[offset_y][offset_x] == "[ ]":
-                        grid[offset_y][offset_x] = "[o]"
+                        grid[offset_y][offset_x] = self.data.miss_marker
 
     def find_ship(self, x, y, ships_collection):
         for ship in ships_collection:
@@ -191,9 +191,9 @@ class DefaultGameScene:
             for j in range(10):
                 if players_grid[i][j] == self.data.ship_marker:
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["CYAN"])
-                elif players_grid[i][j] == "[#]":
+                elif players_grid[i][j] == self.data.hit_marker:
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["YELLOW"])
-                elif players_grid[i][j] == "[x]":
+                elif players_grid[i][j] == self.data.destroyed_marker:
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["RED"])
                 else:
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j])
@@ -201,11 +201,11 @@ class DefaultGameScene:
     def print_enemy_grid(self, stdscr, colors, enemys_grid):
         for i in range(10):
             for j in range(10):
-                if enemys_grid[i][j] == "[#]":
+                if enemys_grid[i][j] == self.data.hit_marker:
                     stdscr.addstr(i+3, j*3+53, enemys_grid[i][j], colors["YELLOW"])
-                elif enemys_grid[i][j] == "[x]":
+                elif enemys_grid[i][j] == self.data.destroyed_marker:
                     stdscr.addstr(i+3, j*3+53, enemys_grid[i][j], colors["RED"])
-                elif enemys_grid[i][j] == "[o]" or enemys_grid[i][j] == "[ ]":
+                elif enemys_grid[i][j] == self.data.miss_marker or enemys_grid[i][j] == "[ ]":
                     stdscr.addstr(i+3, j*3+53, enemys_grid[i][j])
                 else:
                     stdscr.addstr(i+3, j*3+53, "[ ]")
