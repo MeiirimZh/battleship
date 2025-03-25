@@ -42,49 +42,6 @@ class AI:
         self.first_ship_in_chain = []
 
         self.current_attack_offsets = [[0, 1], [0, -1], [1, 0], [-1, 0]]
-        
-    def rotate_ship(self, ship):
-        ship_orientation = self.find_ship_orientation(self.building_ships[-1])
-        if ship_orientation != "Centered":
-            if ship_orientation == "Vertical":
-                i = ship[0][0]
-                for pos in ship[1:]:
-                    i += 1
-                    pos[0], pos[1] = i, ship[0][1]
-
-                if ship[-1][0] > 9:
-                    offset = ship[-1][0] - 9
-
-                    for pos in ship:
-                        pos[0] -= offset
-            else:
-                i = ship[0][1]
-                for pos in ship[1:]:
-                    i += 1
-                    pos[0], pos[1] = ship[0][0], i
-                
-                if ship[-1][1] > 9:
-                    offset = ship[-1][1] - 9
-
-                    for pos in ship:
-                        pos[1] -= offset
-    
-    def find_ship_orientation(self, ship):
-        if len(ship) == 1:
-            return "Centered"
-        
-        if ship[1][0] > ship[0][0]:
-            return "Horizontal"
-        if ship[1][1] > ship[0][1]:
-            return "Vertical"
-
-    def ship_contacts(self, ship):
-        for pos in ship:
-            for offset in self.offsets:
-                x = pos[0] + offset[0]
-                y = pos[1] + offset[1]
-                if 0 <= x < 10 and 0 <= y < 10 and self.grid[y][x] == self.data.ship_marker:
-                    return True
 
     def place_ships(self):
         while len(self.building_ships) != 0:
@@ -94,9 +51,9 @@ class AI:
                 rotate = random.choice([True, False])
 
                 if rotate:
-                    self.rotate_ship(temp_ship)
+                    self.game.rotate_ship(temp_ship)
 
-                ship_orientation = self.find_ship_orientation(temp_ship)
+                ship_orientation = self.game.find_ship_orientation(temp_ship)
 
                 if ship_orientation == "Vertical":
                     x_move = random.randint(0, 9)
@@ -111,7 +68,7 @@ class AI:
                         pos[0] += x_move
                         pos[1] += y_move
 
-                if not self.ship_contacts(temp_ship):
+                if not self.game.ship_contacts(temp_ship, self.grid):
                     for pos in temp_ship:
                         self.grid[pos[1]][pos[0]] = self.data.ship_marker
 
