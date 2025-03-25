@@ -23,7 +23,6 @@ class DefaultGameScene:
         self.player_2_ships_msg = ""
 
         self.turn_msg = ""
-
         self.error_msg = ""
 
     def reset(self):
@@ -187,28 +186,28 @@ class DefaultGameScene:
             stdscr.addstr(i+2, 0 + n_offset, str(i))
 
     def print_player_grid(self, stdscr, colors, players_grid):
+        marker_colors = {self.data.ship_marker: colors["CYAN"], self.data.hit_marker: colors["YELLOW"],
+                        self.data.destroyed_marker: colors["RED"]}
+
         for i in range(10):
             for j in range(10):
-                if players_grid[i][j] == self.data.ship_marker:
-                    stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["CYAN"])
-                elif players_grid[i][j] == self.data.hit_marker:
-                    stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["YELLOW"])
-                elif players_grid[i][j] == self.data.destroyed_marker:
-                    stdscr.addstr(i+3, j*3+3, players_grid[i][j], colors["RED"])
-                else:
+                if players_grid[i][j] in [self.data.miss_marker, "[ ]"]:
                     stdscr.addstr(i+3, j*3+3, players_grid[i][j])
+                else:
+                    stdscr.addstr(i+3, j*3+3, players_grid[i][j], marker_colors[players_grid[i][j]])
 
     def print_enemy_grid(self, stdscr, colors, enemys_grid):
+        marker_colors = {self.data.ship_marker: colors["CYAN"], self.data.hit_marker: colors["YELLOW"],
+                        self.data.destroyed_marker: colors["RED"]}
+
         for i in range(10):
             for j in range(10):
-                if enemys_grid[i][j] == self.data.hit_marker:
-                    stdscr.addstr(i+3, j*3+53, enemys_grid[i][j], colors["YELLOW"])
-                elif enemys_grid[i][j] == self.data.destroyed_marker:
-                    stdscr.addstr(i+3, j*3+53, enemys_grid[i][j], colors["RED"])
-                elif enemys_grid[i][j] == self.data.miss_marker or enemys_grid[i][j] == "[ ]":
+                if enemys_grid[i][j] in [self.data.miss_marker, "[ ]"]:
                     stdscr.addstr(i+3, j*3+53, enemys_grid[i][j])
-                else:
+                elif enemys_grid[i][j] == self.data.ship_marker:
                     stdscr.addstr(i+3, j*3+53, "[ ]")
+                else:
+                    stdscr.addstr(i+3, j*3+53, enemys_grid[i][j], marker_colors[enemys_grid[i][j]])
 
     def all_ships_destroyed(self, ship_collection: list):
         return len(ship_collection) == 0
